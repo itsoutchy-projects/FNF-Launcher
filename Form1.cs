@@ -38,6 +38,7 @@ namespace FNF_Launcher
             IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
             shortcut.Description = $"Shortcut for the instance {name}";
             shortcut.TargetPath = path;
+            shortcut.WorkingDirectory = Directory.GetParent(path).FullName;
             shortcut.Save();
         }
 
@@ -106,7 +107,7 @@ namespace FNF_Launcher
         {
             string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
             CreateShortcut(instances.SelectedItems[0].Text, $"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}");
-            Messenger.MessageBox("Done!");
+            Messenger.MessageBox("Done!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void RightPanelShowFolder_Click(object? sender, EventArgs e)
