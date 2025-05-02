@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using FNF_Launcher.Properties;
 using IWshRuntimeLibrary;
 using File = System.IO.File;
+using DarkModeForms;
 
 namespace FNF_Launcher
 {
@@ -40,11 +41,32 @@ namespace FNF_Launcher
             shortcut.Save();
         }
 
+        public DarkModeCS? dm = null;
+
         public Form1()
         {
             InitializeComponent();
             try
             {
+                if (!File.Exists(PathUtils.Absolute("settings.txt")))
+                {
+                    File.WriteAllText(PathUtils.Absolute("settings.txt"), "theme=system");
+                }
+                DarkModeCS.DisplayMode mode = DarkModeCS.DisplayMode.SystemDefault;
+                string[] settings = File.ReadAllText(PathUtils.Absolute("settings.txt")).Split("\n");
+                if (settings[0].Split("=")[1] == "dark")
+                {
+                    mode = DarkModeCS.DisplayMode.DarkMode;
+                } else if (settings[0].Split("=")[1] == "light")
+                {
+                    mode = DarkModeCS.DisplayMode.ClearMode;
+                }
+                dm = new DarkModeCS(this)
+                {
+                    //[Optional] Choose your preferred color mode here:
+                    ColorMode = mode
+                };
+
                 instanceNameLabel.Text = "...";
                 if (!Directory.Exists($"{Directory.GetCurrentDirectory()}/Instances/"))
                 {
@@ -57,18 +79,34 @@ namespace FNF_Launcher
                 rightPanelShowFolder.Click += RightPanelShowFolder_Click;
                 instances.SelectedIndexChanged += Instances_SelectedIndexChanged;
                 makeshortcut.Click += Makeshortcut_Click;
+                settingsBttn.Click += SettingsBttn_Click;
             } catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Messenger.MessageBox(ex.Message);
             }
             //AddInstance("test", InstanceType.Psych);
+        }
+
+        private void SettingsBttn_Click(object? sender, EventArgs e)
+        {
+            Settings settings = new Settings(this);
+            settings.Show();
+        }
+
+        public void changeTheme(DarkModeCS.DisplayMode theme)
+        {
+            dm = new DarkModeCS(this)
+            {
+                //[Optional] Choose your preferred color mode here:
+                ColorMode = theme
+            };
         }
 
         private void Makeshortcut_Click(object? sender, EventArgs e)
         {
             string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
             CreateShortcut(instances.SelectedItems[0].Text, $"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}");
-            MessageBox.Show("Done!");
+            Messenger.MessageBox("Done!");
         }
 
         private void RightPanelShowFolder_Click(object? sender, EventArgs e)
@@ -113,6 +151,10 @@ namespace FNF_Launcher
                     case "Duplicate":
                         DuplicateMenu menu = new DuplicateMenu();
                         menu.ShowDialog();
+                        if (menu.name == string.Empty)
+                        {
+                            return;
+                        }
                         Folder.CopyDirectory($"{Directory.GetCurrentDirectory()}/Instances/{instances.SelectedItems[0].Text}", $"{Directory.GetCurrentDirectory()}/Instances/{menu.name}", true);
                         File.WriteAllText(GetMetaFile(menu.name), instanceNameLabel.Text);
                         if (Directory.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/PsychEngine"))
@@ -241,7 +283,7 @@ namespace FNF_Launcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ex.Message} \n{ex.StackTrace}");
+                Messenger.MessageBox($"{ex.Message} \n{ex.StackTrace}");
             }
         }
 

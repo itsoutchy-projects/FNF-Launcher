@@ -33,8 +33,10 @@
             contextMenuStrip1 = new ContextMenuStrip(components);
             openInstanceFolderToolStripMenuItem = new ToolStripMenuItem();
             runToolStripMenuItem = new ToolStripMenuItem();
+            duplicateToolStripMenuItem = new ToolStripMenuItem();
             newInstance = new Button();
             panel1 = new Panel();
+            settingsBttn = new Button();
             pictureBox1 = new PictureBox();
             instances = new ListView();
             panel2 = new Panel();
@@ -42,7 +44,6 @@
             instanceNameLabel = new Label();
             rightPanelShowFolder = new Button();
             rightPanelRun = new Button();
-            duplicateToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -54,7 +55,7 @@
             contextMenuStrip1.ImageScalingSize = new Size(20, 20);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { openInstanceFolderToolStripMenuItem, runToolStripMenuItem, duplicateToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(219, 104);
+            contextMenuStrip1.Size = new Size(219, 76);
             // 
             // openInstanceFolderToolStripMenuItem
             // 
@@ -67,6 +68,12 @@
             runToolStripMenuItem.Name = "runToolStripMenuItem";
             runToolStripMenuItem.Size = new Size(218, 24);
             runToolStripMenuItem.Text = "Run";
+            // 
+            // duplicateToolStripMenuItem
+            // 
+            duplicateToolStripMenuItem.Name = "duplicateToolStripMenuItem";
+            duplicateToolStripMenuItem.Size = new Size(218, 24);
+            duplicateToolStripMenuItem.Text = "Duplicate";
             // 
             // newInstance
             // 
@@ -85,6 +92,7 @@
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(settingsBttn);
             panel1.Controls.Add(pictureBox1);
             panel1.Controls.Add(instances);
             panel1.Controls.Add(newInstance);
@@ -93,6 +101,19 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(551, 503);
             panel1.TabIndex = 2;
+            // 
+            // settingsBttn
+            // 
+            settingsBttn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            settingsBttn.Image = (Image)resources.GetObject("settingsBttn.Image");
+            settingsBttn.ImageAlign = ContentAlignment.MiddleLeft;
+            settingsBttn.Location = new Point(155, 3);
+            settingsBttn.Name = "settingsBttn";
+            settingsBttn.Size = new Size(110, 53);
+            settingsBttn.TabIndex = 6;
+            settingsBttn.Text = "Settings";
+            settingsBttn.TextAlign = ContentAlignment.MiddleRight;
+            settingsBttn.UseVisualStyleBackColor = true;
             // 
             // pictureBox1
             // 
@@ -123,24 +144,24 @@
             panel2.Controls.Add(rightPanelShowFolder);
             panel2.Controls.Add(rightPanelRun);
             panel2.Dock = DockStyle.Right;
-            panel2.Location = new Point(554, 0);
+            panel2.Location = new Point(556, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(121, 503);
+            panel2.Size = new Size(131, 503);
             panel2.TabIndex = 3;
             // 
             // makeshortcut
             // 
             makeshortcut.Enabled = false;
-            makeshortcut.Location = new Point(0, 94);
+            makeshortcut.Location = new Point(3, 95);
             makeshortcut.Name = "makeshortcut";
-            makeshortcut.Size = new Size(115, 48);
+            makeshortcut.Size = new Size(123, 48);
             makeshortcut.TabIndex = 5;
             makeshortcut.Text = "Create Shortcut";
             makeshortcut.UseVisualStyleBackColor = true;
             // 
             // instanceNameLabel
             // 
-            instanceNameLabel.Location = new Point(-1, 3);
+            instanceNameLabel.Location = new Point(2, 4);
             instanceNameLabel.Name = "instanceNameLabel";
             instanceNameLabel.Size = new Size(121, 53);
             instanceNameLabel.TabIndex = 4;
@@ -150,9 +171,9 @@
             // rightPanelShowFolder
             // 
             rightPanelShowFolder.Enabled = false;
-            rightPanelShowFolder.Location = new Point(0, 148);
+            rightPanelShowFolder.Location = new Point(3, 149);
             rightPanelShowFolder.Name = "rightPanelShowFolder";
-            rightPanelShowFolder.Size = new Size(115, 29);
+            rightPanelShowFolder.Size = new Size(123, 29);
             rightPanelShowFolder.TabIndex = 3;
             rightPanelShowFolder.Text = "Show Folder";
             rightPanelShowFolder.UseVisualStyleBackColor = true;
@@ -160,24 +181,18 @@
             // rightPanelRun
             // 
             rightPanelRun.Enabled = false;
-            rightPanelRun.Location = new Point(0, 59);
+            rightPanelRun.Location = new Point(3, 60);
             rightPanelRun.Name = "rightPanelRun";
-            rightPanelRun.Size = new Size(115, 29);
+            rightPanelRun.Size = new Size(123, 29);
             rightPanelRun.TabIndex = 2;
             rightPanelRun.Text = "Run";
             rightPanelRun.UseVisualStyleBackColor = true;
-            // 
-            // duplicateToolStripMenuItem
-            // 
-            duplicateToolStripMenuItem.Name = "duplicateToolStripMenuItem";
-            duplicateToolStripMenuItem.Size = new Size(218, 24);
-            duplicateToolStripMenuItem.Text = "Duplicate";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(675, 503);
+            ClientSize = new Size(687, 503);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "Form1";
@@ -203,5 +218,6 @@
         private PictureBox pictureBox1;
         private Button makeshortcut;
         private ToolStripMenuItem duplicateToolStripMenuItem;
+        private Button settingsBttn;
     }
 }

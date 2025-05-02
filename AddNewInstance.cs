@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DarkModeForms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,10 +18,26 @@ namespace FNF_Launcher
 
         public bool created = false;
 
+        public DarkModeCS dm;
+
         public AddNewInstance()
         {
             InitializeComponent();
-
+            string[] settings = File.ReadAllText(PathUtils.Absolute("settings.txt")).Split("\n");
+            DarkModeCS.DisplayMode mode = DarkModeCS.DisplayMode.SystemDefault;
+            if (settings[0].Split("=")[1] == "dark")
+            {
+                mode = DarkModeCS.DisplayMode.DarkMode;
+            }
+            else if (settings[0].Split("=")[1] == "light")
+            {
+                mode = DarkModeCS.DisplayMode.ClearMode;
+            }
+            dm = new DarkModeCS(this)
+            {
+                //[Optional] Choose your preferred color mode here:
+                ColorMode = mode
+            };
             doneButton.Click += DoneButton_Click;
         }
 
@@ -28,7 +45,7 @@ namespace FNF_Launcher
         {
             if (instanceName.Text.Length == 0)
             {
-                MessageBox.Show("You need to enter a name");
+                Messenger.MessageBox("You need to enter a name");
                 return;
             }
             name = instanceName.Text;

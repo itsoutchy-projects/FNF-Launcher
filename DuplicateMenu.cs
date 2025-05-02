@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DarkModeForms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,11 +14,25 @@ namespace FNF_Launcher
     public partial class DuplicateMenu : Form
     {
         public string name = string.Empty;
-
+        public DarkModeCS dm;
         public DuplicateMenu()
         {
             InitializeComponent();
-
+            string[] settings = File.ReadAllText(PathUtils.Absolute("settings.txt")).Split("\n");
+            DarkModeCS.DisplayMode mode = DarkModeCS.DisplayMode.SystemDefault;
+            if (settings[0].Split("=")[1] == "dark")
+            {
+                mode = DarkModeCS.DisplayMode.DarkMode;
+            }
+            else if (settings[0].Split("=")[1] == "light")
+            {
+                mode = DarkModeCS.DisplayMode.ClearMode;
+            }
+            dm = new DarkModeCS(this)
+            {
+                //[Optional] Choose your preferred color mode here:
+                ColorMode = mode
+            };
             doneBttn.Click += DoneBttn_Click;
         }
 
@@ -26,11 +41,11 @@ namespace FNF_Launcher
             name = nameField.Text;
             if (name == string.Empty)
             {
-                MessageBox.Show("Instance name cannot be empty");
+                Messenger.MessageBox("Instance name cannot be empty");
                 return;
             } else if (Directory.Exists($"{Directory.GetCurrentDirectory()}/Instances/{name}"))
             {
-                MessageBox.Show("An instance with this name already exists");
+                Messenger.MessageBox("An instance with this name already exists");
                 return;
             }
             Close();
