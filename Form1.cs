@@ -1,0 +1,307 @@
+using System.Net;
+using Octokit;
+using System.Diagnostics;
+using System.Xml.Linq;
+using FNF_Launcher.Properties;
+using IWshRuntimeLibrary;
+using File = System.IO.File;
+
+namespace FNF_Launcher
+{
+    public partial class Form1 : Form
+    {
+        // FNF Launcher created by itsoutchy
+        //
+        // Engines were created by their respective owners:
+        // Psych Engine    - ShadowMario
+        // Kade Engine     - KadeDev
+        // Codename Engine - CodenameCrew
+        //
+        // Please do not copy my code
+        // Instead create a fork of my code with your fixes
+        // And please keep this here, along with any new credits you need to add
+        // (eg: you (for making the fork), and any engines you add)
+
+        // Scroll down since you'll need to make some changes below
+
+        public string GetMetaFile(string name)
+        {
+            return $"{Directory.GetCurrentDirectory()}/Instances/{name}/meta";
+        }
+
+        private void CreateShortcut(string name, string path)
+        {
+            object shDesktop = "Desktop";
+            WshShell shell = new WshShell();
+            string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @$"\{name}.lnk";
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+            shortcut.Description = $"Shortcut for the instance {name}";
+            shortcut.TargetPath = path;
+            shortcut.Save();
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+            try
+            {
+                instanceNameLabel.Text = "...";
+                if (!Directory.Exists($"{Directory.GetCurrentDirectory()}/Instances/"))
+                {
+                    Directory.CreateDirectory($"{Directory.GetCurrentDirectory()}/Instances/");
+                }
+                refreshInstances();
+                instances.DoubleClick += Instances_DoubleClick;
+                contextMenuStrip1.ItemClicked += ContextMenuStrip1_ItemClicked;
+                rightPanelRun.Click += RightPanelRun_Click;
+                rightPanelShowFolder.Click += RightPanelShowFolder_Click;
+                instances.SelectedIndexChanged += Instances_SelectedIndexChanged;
+                makeshortcut.Click += Makeshortcut_Click;
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            //AddInstance("test", InstanceType.Psych);
+        }
+
+        private void Makeshortcut_Click(object? sender, EventArgs e)
+        {
+            string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
+            CreateShortcut(instances.SelectedItems[0].Text, $"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}");
+            MessageBox.Show("Done!");
+        }
+
+        private void RightPanelShowFolder_Click(object? sender, EventArgs e)
+        {
+            showInExplorer();
+        }
+
+        private void RightPanelRun_Click(object? sender, EventArgs e)
+        {
+            run();
+        }
+
+        private void Instances_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (instances.SelectedItems.Count > 0)
+            {
+                instanceNameLabel.Text = instances.SelectedItems[0].Text;
+                rightPanelRun.Enabled = true;
+                rightPanelShowFolder.Enabled = true;
+                makeshortcut.Enabled = true;
+            } else
+            {
+                instanceNameLabel.Text = "...";
+                rightPanelRun.Enabled = false;
+                rightPanelShowFolder.Enabled = false;
+                makeshortcut.Enabled = false;
+            }
+        }
+
+        private void ContextMenuStrip1_ItemClicked(object? sender, ToolStripItemClickedEventArgs e)
+        {
+            if (instances.SelectedItems.Count != 0)
+            {
+                switch (e.ClickedItem.Text)
+                {
+                    case "Open Instance Folder":
+                        showInExplorer();
+                        return;
+                    case "Run":
+                        run();
+                        return;
+                    case "Duplicate":
+                        DuplicateMenu menu = new DuplicateMenu();
+                        menu.ShowDialog();
+                        Folder.CopyDirectory($"{Directory.GetCurrentDirectory()}/Instances/{instances.SelectedItems[0].Text}", $"{Directory.GetCurrentDirectory()}/Instances/{menu.name}", true);
+                        File.WriteAllText(GetMetaFile(menu.name), instanceNameLabel.Text);
+                        if (Directory.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/PsychEngine"))
+                        {
+                            File.WriteAllText(GetMetaFile(menu.name), $"exepath=Instances/{menu.name}/{InstanceTypeToParent(InstanceType.Psych)}/{InstanceTypeToParent(InstanceType.Psych)}.exe");
+                        }
+                        else
+                        {
+                            InstanceType type = InstanceType.Kade;
+                            if (File.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/CodenameEngine.exe"))
+                            {
+                                type = InstanceType.Codename;
+                            }
+                            File.WriteAllText(GetMetaFile(menu.name), $"exepath=Instances/{menu.name}/{InstanceTypeToParent(type)}.exe");
+                        }
+                        refreshInstances();
+                        return;
+                }
+            }
+        }
+
+        public void showInExplorer()
+        {
+            string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
+            if (meta[0].Split("=")[1].Contains("PsychEngine"))
+            {
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", $"{Directory.GetCurrentDirectory()}\\instances\\{instances.SelectedItems[0].Text}\\PsychEngine\\");
+            }
+            else
+            {
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", $"{Directory.GetCurrentDirectory()}\\instances\\{instances.SelectedItems[0].Text}\\");
+            }
+        }
+
+        private void Instances_DoubleClick(object? sender, EventArgs e)
+        {
+            run();
+        }
+
+        public void run()
+        {
+            if (instances.SelectedItems.Count > 0)
+            {
+                string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
+                Process p = new Process();
+                p.StartInfo = new ProcessStartInfo
+                {
+                    FileName = $"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}"
+                };
+                p.StartInfo.WorkingDirectory = (new DirectoryInfo($"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}").Parent.FullName);
+                if (meta[0].Contains("Psych"))
+                {
+                    //p.StartInfo.WorkingDirectory = $"{Directory.GetCurrentDirectory()}/{(string)instances.Items[instances.SelectedIndex]}/PsychEngine/".Replace("\\", "/");
+                }
+                else
+                {
+                    //p.StartInfo.WorkingDirectory = $"{Directory.GetCurrentDirectory()}/{(string)instances.Items[instances.SelectedIndex]}/".Replace("\\", "/");
+                }
+                p.Start();
+            }
+        }
+
+        public void refreshInstances() // STUPIDSTUPIDSTUPIDSTUPID FFS OMFGGGGGGGGGGGGGGGG
+        {
+            //int s = hasBeenused ? instances.Items.IndexOf(instances.SelectedItems[0]) : 0;
+            
+            if (instances.Items.Count > 0)
+            {
+                instances.Items.Clear(); // prepare it for refreshing them
+            }
+            foreach (string p in Directory.GetDirectories($"{Directory.GetCurrentDirectory()}/Instances"))
+            {   
+                instances.Items.Add(new ListViewItem
+                {
+                    Text = Path.GetFileName(p.Replace("/", @"\")),
+                    //ImageIndex = 0
+                });
+            }
+        }
+
+        public async void AddInstance(string name, InstanceType type)
+        {
+            try
+            {
+                Directory.CreateDirectory($"{Directory.GetCurrentDirectory()}/Instances");
+
+                WebClient webclient = new WebClient();
+                webclient.Headers.Add("user-agent", "Anything");
+                string ext = "zip";
+                Downloading downloading = new Downloading();
+                downloading.Show();
+                if (type == InstanceType.Psych)
+                {
+                    // Change this to associate it with you
+                    // Replace "itsoutchy-projects" with your Github name
+                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                    Tuple<string, string> rn = InstanceTypeToPair(type);
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                    webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                } else if (type == InstanceType.Kade)
+                {
+                    // idrk if this actually gets the latest version - im trying to figure this out
+                    webclient.DownloadFile("https://gamebanana.com/dl/619823", $"{Directory.GetCurrentDirectory()}/Instances/{name}.7z");
+                    ext = "7z";
+                } else if (type == InstanceType.Codename)
+                {
+                    // this one is automatically updated so its all good
+                    webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                }
+                downloading.stepChange();
+                ExtractFile($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}", $"{Directory.GetCurrentDirectory()}/Instances/{name}");
+
+                File.Delete($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}");
+
+                if (type == InstanceType.Psych)
+                {
+                    File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}/{InstanceTypeToParent(type)}.exe");
+                } else
+                {
+                    File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
+                }
+                downloading.Close();
+
+                refreshInstances();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message} \n{ex.StackTrace}");
+            }
+        }
+
+        public Tuple<string, string> InstanceTypeToPair(InstanceType type)
+        {
+            Tuple<string, string>[] engines =
+            {
+                new Tuple<string, string>("ShadowMario", "FNF-PsychEngine"),
+                new Tuple<string, string>("KadeDev", "Kade-Engine"),
+                new Tuple<string, string>("CodenameCrew", "CodenameEngine")
+            };
+            return engines[(int)type];
+        }
+
+        public void ExtractFile(string sourceArchive, string destination)
+        {
+            string zPath = "7za.exe"; //add to proj and set CopyToOuputDir
+            try
+            {
+                ProcessStartInfo pro = new ProcessStartInfo();
+                pro.WindowStyle = ProcessWindowStyle.Hidden;
+                pro.FileName = zPath;
+                pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", sourceArchive, destination);
+                Process x = Process.Start(pro);
+                x.WaitForExit();
+            }
+            catch (Exception Ex)
+            {
+                //handle error
+            }
+        }
+
+        public string InstanceTypeToParent(InstanceType type)
+        {
+            string[] engines =
+            {
+                "PsychEngine",
+                "Kade Engine",
+                "CodenameEngine"
+            };
+            return engines[(int)type];
+        }
+
+        private void newInstance_Click(object sender, EventArgs e)
+        {
+            AddNewInstance addNewInstance = new AddNewInstance();
+            addNewInstance.ShowDialog();
+            if (!addNewInstance.created)
+            {
+                return;
+            }
+            AddInstance(addNewInstance.name, addNewInstance.type);
+        }
+    }
+
+    // FNF Engines, so it knows where to get the files from
+    public enum InstanceType
+    {
+        Psych,
+        Kade,
+        Codename
+    }
+}
