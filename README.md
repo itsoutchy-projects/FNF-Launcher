@@ -4,5 +4,6 @@ This launcher creates an easy to use way to download engines and create instance
 Easily manage and find your instances and download the latest version of each engine with a few clicks.
 
 TODO:  
-[ ] Add more engines (leather engine, os engine, etc)  
-[ ] First release
+- [ ] Add more engines (leather engine, os engine, etc)  
+- [ ] First release
+	- [ ] Confirm most bugs are fixed
