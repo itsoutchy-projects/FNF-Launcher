@@ -82,11 +82,34 @@ namespace FNF_Launcher
                 makeshortcut.Click += Makeshortcut_Click;
                 settingsBttn.Click += SettingsBttn_Click;
                 aboutBttn.Click += AboutBttn_Click;
+                instances.KeyDown += Instances_KeyDown;
             } catch (Exception ex)
             {
                 Messenger.MessageBox(ex.Message);
             }
             //AddInstance("test", InstanceType.Psych);
+        }
+
+        private void Instances_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && instances.SelectedItems.Count > 0)
+            {
+                deleteSelected();
+            }
+        }
+
+        public void deleteSelected()
+        {
+            if (instances.SelectedItems.Count > 0)
+            {
+                string s = instances.SelectedItems[0].Text;
+                if (MessageBox.Show($"Are you sure you want to delete {s}?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    instances.SelectedItems[0].Selected = false;
+                    Directory.Delete($"{Directory.GetCurrentDirectory()}/Instances/{s}", true);
+                    refreshInstances();
+                }
+            }
         }
 
         private void AboutBttn_Click(object? sender, EventArgs e)
@@ -179,6 +202,9 @@ namespace FNF_Launcher
                             File.WriteAllText(GetMetaFile(menu.name), $"exepath=Instances/{menu.name}/{InstanceTypeToParent(type)}.exe");
                         }
                         refreshInstances();
+                        return;
+                    case "Delete":
+                        deleteSelected();
                         return;
                 }
             }

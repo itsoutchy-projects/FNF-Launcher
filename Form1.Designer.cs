@@ -36,6 +36,7 @@
             duplicateToolStripMenuItem = new ToolStripMenuItem();
             newInstance = new Button();
             panel1 = new Panel();
+            aboutBttn = new Button();
             settingsBttn = new Button();
             pictureBox1 = new PictureBox();
             instances = new ListView();
@@ -44,7 +45,7 @@
             instanceNameLabel = new Label();
             rightPanelShowFolder = new Button();
             rightPanelRun = new Button();
-            aboutBttn = new Button();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -54,9 +55,9 @@
             // contextMenuStrip1
             // 
             contextMenuStrip1.ImageScalingSize = new Size(20, 20);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { openInstanceFolderToolStripMenuItem, runToolStripMenuItem, duplicateToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { openInstanceFolderToolStripMenuItem, runToolStripMenuItem, duplicateToolStripMenuItem, deleteToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(219, 76);
+            contextMenuStrip1.Size = new Size(219, 128);
             // 
             // openInstanceFolderToolStripMenuItem
             // 
@@ -103,6 +104,19 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(551, 503);
             panel1.TabIndex = 2;
+            // 
+            // aboutBttn
+            // 
+            aboutBttn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            aboutBttn.Image = (Image)resources.GetObject("aboutBttn.Image");
+            aboutBttn.ImageAlign = ContentAlignment.MiddleLeft;
+            aboutBttn.Location = new Point(271, 3);
+            aboutBttn.Name = "aboutBttn";
+            aboutBttn.Size = new Size(97, 53);
+            aboutBttn.TabIndex = 7;
+            aboutBttn.Text = "About";
+            aboutBttn.TextAlign = ContentAlignment.MiddleRight;
+            aboutBttn.UseVisualStyleBackColor = true;
             // 
             // settingsBttn
             // 
@@ -190,18 +204,11 @@
             rightPanelRun.Text = "Run";
             rightPanelRun.UseVisualStyleBackColor = true;
             // 
-            // aboutBttn
+            // deleteToolStripMenuItem
             // 
-            aboutBttn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            aboutBttn.Image = (Image)resources.GetObject("aboutBttn.Image");
-            aboutBttn.ImageAlign = ContentAlignment.MiddleLeft;
-            aboutBttn.Location = new Point(271, 3);
-            aboutBttn.Name = "aboutBttn";
-            aboutBttn.Size = new Size(97, 53);
-            aboutBttn.TabIndex = 7;
-            aboutBttn.Text = "About";
-            aboutBttn.TextAlign = ContentAlignment.MiddleRight;
-            aboutBttn.UseVisualStyleBackColor = true;
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(218, 24);
+            deleteToolStripMenuItem.Text = "Delete";
             // 
             // Form1
             // 
@@ -236,5 +243,6 @@
         private ToolStripMenuItem duplicateToolStripMenuItem;
         private Button settingsBttn;
         private Button aboutBttn;
+        private ToolStripMenuItem deleteToolStripMenuItem;
     }
 }
