@@ -30,11 +30,13 @@
         {
             label1 = new Label();
             themeGroup = new GroupBox();
-            radioButton1 = new RadioButton();
-            radioButton2 = new RadioButton();
             radioButton3 = new RadioButton();
+            radioButton2 = new RadioButton();
+            radioButton1 = new RadioButton();
             doneBttn = new Button();
+            panel1 = new Panel();
             themeGroup.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -52,34 +54,12 @@
             themeGroup.Controls.Add(radioButton3);
             themeGroup.Controls.Add(radioButton2);
             themeGroup.Controls.Add(radioButton1);
-            themeGroup.Location = new Point(12, 39);
+            themeGroup.Location = new Point(0, 3);
             themeGroup.Name = "themeGroup";
             themeGroup.Size = new Size(244, 128);
             themeGroup.TabIndex = 2;
             themeGroup.TabStop = false;
             themeGroup.Text = "Theme";
-            // 
-            // radioButton1
-            // 
-            radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(22, 26);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(77, 24);
-            radioButton1.TabIndex = 0;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "System";
-            radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(22, 56);
-            radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(61, 24);
-            radioButton2.TabIndex = 1;
-            radioButton2.TabStop = true;
-            radioButton2.Text = "Dark";
-            radioButton2.UseVisualStyleBackColor = true;
             // 
             // radioButton3
             // 
@@ -92,6 +72,28 @@
             radioButton3.Text = "Light";
             radioButton3.UseVisualStyleBackColor = true;
             // 
+            // radioButton2
+            // 
+            radioButton2.AutoSize = true;
+            radioButton2.Location = new Point(22, 56);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(61, 24);
+            radioButton2.TabIndex = 1;
+            radioButton2.TabStop = true;
+            radioButton2.Text = "Dark";
+            radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(22, 26);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(77, 24);
+            radioButton1.TabIndex = 0;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "System";
+            radioButton1.UseVisualStyleBackColor = true;
+            // 
             // doneBttn
             // 
             doneBttn.Dock = DockStyle.Bottom;
@@ -102,18 +104,28 @@
             doneBttn.Text = "Done";
             doneBttn.UseVisualStyleBackColor = true;
             // 
+            // panel1
+            // 
+            panel1.AutoScroll = true;
+            panel1.Controls.Add(themeGroup);
+            panel1.Location = new Point(12, 39);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(580, 246);
+            panel1.TabIndex = 3;
+            // 
             // Settings
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(604, 324);
+            Controls.Add(panel1);
             Controls.Add(doneBttn);
-            Controls.Add(themeGroup);
             Controls.Add(label1);
             Name = "Settings";
             Text = "Settings";
             themeGroup.ResumeLayout(false);
             themeGroup.PerformLayout();
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -126,5 +138,6 @@
         private RadioButton radioButton2;
         private RadioButton radioButton1;
         private Button doneBttn;
+        private Panel panel1;
     }
 }

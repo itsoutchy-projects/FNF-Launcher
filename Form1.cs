@@ -103,7 +103,7 @@ namespace FNF_Launcher
             if (instances.SelectedItems.Count > 0)
             {
                 string s = instances.SelectedItems[0].Text;
-                if (MessageBox.Show($"Are you sure you want to delete {s}?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (Messenger.MessageBox($"Are you sure you want to delete {s}?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     instances.SelectedItems[0].Selected = false;
                     Directory.Delete($"{Directory.GetCurrentDirectory()}/Instances/{s}", true);

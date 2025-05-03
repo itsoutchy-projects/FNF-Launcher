@@ -5,5 +5,5 @@ Easily manage and find your instances and download the latest version of each en
 
 TODO:  
 - [ ] Add more engines (leather engine, os engine, etc)  
-- [ ] First release
-	- [ ] Confirm most bugs are fixed
+- [x] First release
+	- [x] Confirm most bugs are fixed
