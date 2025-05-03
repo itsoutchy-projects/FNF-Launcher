@@ -36,6 +36,7 @@
             instanceName = new TextBox();
             label2 = new Label();
             doneButton = new Button();
+            radioButton4 = new RadioButton();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -62,12 +63,13 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(radioButton4);
             groupBox1.Controls.Add(radioButton3);
             groupBox1.Controls.Add(radioButton2);
             groupBox1.Controls.Add(radioButton1);
             groupBox1.Location = new Point(12, 79);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(250, 125);
+            groupBox1.Size = new Size(250, 154);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Engine";
@@ -113,18 +115,29 @@
             // doneButton
             // 
             doneButton.Dock = DockStyle.Bottom;
-            doneButton.Location = new Point(0, 206);
+            doneButton.Location = new Point(0, 239);
             doneButton.Name = "doneButton";
             doneButton.Size = new Size(595, 29);
             doneButton.TabIndex = 6;
             doneButton.Text = "Done";
             doneButton.UseVisualStyleBackColor = true;
             // 
+            // radioButton4
+            // 
+            radioButton4.AutoSize = true;
+            radioButton4.Location = new Point(6, 116);
+            radioButton4.Name = "radioButton4";
+            radioButton4.Size = new Size(128, 24);
+            radioButton4.TabIndex = 5;
+            radioButton4.TabStop = true;
+            radioButton4.Text = "Leather Engine";
+            radioButton4.UseVisualStyleBackColor = true;
+            // 
             // AddNewInstance
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(595, 235);
+            ClientSize = new Size(595, 268);
             Controls.Add(doneButton);
             Controls.Add(label2);
             Controls.Add(instanceName);
@@ -147,5 +160,6 @@
         private TextBox instanceName;
         private Label label2;
         private Button doneButton;
+        private RadioButton radioButton4;
     }
 }

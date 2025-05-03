@@ -59,6 +59,10 @@ namespace FNF_Launcher
             {
                 type = InstanceType.Kade;
             }
+            else if (radioButton4.Checked)
+            {
+                type = InstanceType.LeatherEngine;
+            }
             created = true;
             Close();
         }

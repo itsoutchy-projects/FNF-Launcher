@@ -198,6 +198,9 @@ namespace FNF_Launcher
                             if (File.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/CodenameEngine.exe"))
                             {
                                 type = InstanceType.Codename;
+                            } else if (File.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/Leather Engine.exe"))
+                            {
+                                type = InstanceType.LeatherEngine;
                             }
                             File.WriteAllText(GetMetaFile(menu.name), $"exepath=Instances/{menu.name}/{InstanceTypeToParent(type)}.exe");
                         }
@@ -298,8 +301,17 @@ namespace FNF_Launcher
                 {
                     // this one is automatically updated so its all good
                     webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                } else if (type == InstanceType.LeatherEngine)
+                {
+                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                    Tuple<string, string> rn = InstanceTypeToPair(type);
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                    int no = Environment.Is64BitOperatingSystem ? 3 : 4;
+
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
                 }
-                downloading.stepChange();
+                    downloading.stepChange();
                 ExtractFile($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}", $"{Directory.GetCurrentDirectory()}/Instances/{name}");
 
                 File.Delete($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}");
@@ -327,7 +339,8 @@ namespace FNF_Launcher
             {
                 new Tuple<string, string>("ShadowMario", "FNF-PsychEngine"),
                 new Tuple<string, string>("KadeDev", "Kade-Engine"),
-                new Tuple<string, string>("CodenameCrew", "CodenameEngine")
+                new Tuple<string, string>("CodenameCrew", "CodenameEngine"),
+                new Tuple<string, string>("Leather128", "LeatherEngine")
             };
             return engines[(int)type];
         }
@@ -356,7 +369,8 @@ namespace FNF_Launcher
             {
                 "PsychEngine",
                 "Kade Engine",
-                "CodenameEngine"
+                "CodenameEngine",
+                "Leather Engine"
             };
             return engines[(int)type];
         }
@@ -378,6 +392,7 @@ namespace FNF_Launcher
     {
         Psych,
         Kade,
-        Codename
+        Codename,
+        LeatherEngine
     }
 }
