@@ -81,11 +81,18 @@ namespace FNF_Launcher
                 instances.SelectedIndexChanged += Instances_SelectedIndexChanged;
                 makeshortcut.Click += Makeshortcut_Click;
                 settingsBttn.Click += SettingsBttn_Click;
+                aboutBttn.Click += AboutBttn_Click;
             } catch (Exception ex)
             {
                 Messenger.MessageBox(ex.Message);
             }
             //AddInstance("test", InstanceType.Psych);
+        }
+
+        private void AboutBttn_Click(object? sender, EventArgs e)
+        {
+            About about = new About();
+            about.ShowDialog();
         }
 
         private void SettingsBttn_Click(object? sender, EventArgs e)

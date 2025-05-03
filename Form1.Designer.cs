@@ -44,6 +44,7 @@
             instanceNameLabel = new Label();
             rightPanelShowFolder = new Button();
             rightPanelRun = new Button();
+            aboutBttn = new Button();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -92,6 +93,7 @@
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(aboutBttn);
             panel1.Controls.Add(settingsBttn);
             panel1.Controls.Add(pictureBox1);
             panel1.Controls.Add(instances);
@@ -188,6 +190,19 @@
             rightPanelRun.Text = "Run";
             rightPanelRun.UseVisualStyleBackColor = true;
             // 
+            // aboutBttn
+            // 
+            aboutBttn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            aboutBttn.Image = (Image)resources.GetObject("aboutBttn.Image");
+            aboutBttn.ImageAlign = ContentAlignment.MiddleLeft;
+            aboutBttn.Location = new Point(271, 3);
+            aboutBttn.Name = "aboutBttn";
+            aboutBttn.Size = new Size(97, 53);
+            aboutBttn.TabIndex = 7;
+            aboutBttn.Text = "About";
+            aboutBttn.TextAlign = ContentAlignment.MiddleRight;
+            aboutBttn.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -195,6 +210,7 @@
             ClientSize = new Size(687, 503);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             Text = "FNF Launcher - Friday Night Funkin' Launcher";
             contextMenuStrip1.ResumeLayout(false);
@@ -219,5 +235,6 @@
         private Button makeshortcut;
         private ToolStripMenuItem duplicateToolStripMenuItem;
         private Button settingsBttn;
+        private Button aboutBttn;
     }
 }
