@@ -34,6 +34,7 @@
             openInstanceFolderToolStripMenuItem = new ToolStripMenuItem();
             runToolStripMenuItem = new ToolStripMenuItem();
             duplicateToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
             newInstance = new Button();
             panel1 = new Panel();
             aboutBttn = new Button();
@@ -41,11 +42,11 @@
             pictureBox1 = new PictureBox();
             instances = new ListView();
             panel2 = new Panel();
+            installMod = new Button();
             makeshortcut = new Button();
             instanceNameLabel = new Label();
             rightPanelShowFolder = new Button();
             rightPanelRun = new Button();
-            deleteToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -57,7 +58,7 @@
             contextMenuStrip1.ImageScalingSize = new Size(20, 20);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { openInstanceFolderToolStripMenuItem, runToolStripMenuItem, duplicateToolStripMenuItem, deleteToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(219, 128);
+            contextMenuStrip1.Size = new Size(219, 100);
             // 
             // openInstanceFolderToolStripMenuItem
             // 
@@ -76,6 +77,12 @@
             duplicateToolStripMenuItem.Name = "duplicateToolStripMenuItem";
             duplicateToolStripMenuItem.Size = new Size(218, 24);
             duplicateToolStripMenuItem.Text = "Duplicate";
+            // 
+            // deleteToolStripMenuItem
+            // 
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(218, 24);
+            deleteToolStripMenuItem.Text = "Delete";
             // 
             // newInstance
             // 
@@ -155,6 +162,7 @@
             // panel2
             // 
             panel2.BorderStyle = BorderStyle.FixedSingle;
+            panel2.Controls.Add(installMod);
             panel2.Controls.Add(makeshortcut);
             panel2.Controls.Add(instanceNameLabel);
             panel2.Controls.Add(rightPanelShowFolder);
@@ -164,6 +172,16 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(131, 503);
             panel2.TabIndex = 3;
+            // 
+            // installMod
+            // 
+            installMod.Enabled = false;
+            installMod.Location = new Point(2, 184);
+            installMod.Name = "installMod";
+            installMod.Size = new Size(123, 29);
+            installMod.TabIndex = 6;
+            installMod.Text = "Install Mod";
+            installMod.UseVisualStyleBackColor = true;
             // 
             // makeshortcut
             // 
@@ -204,12 +222,6 @@
             rightPanelRun.Text = "Run";
             rightPanelRun.UseVisualStyleBackColor = true;
             // 
-            // deleteToolStripMenuItem
-            // 
-            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(218, 24);
-            deleteToolStripMenuItem.Text = "Delete";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -244,5 +256,6 @@
         private Button settingsBttn;
         private Button aboutBttn;
         private ToolStripMenuItem deleteToolStripMenuItem;
+        private Button installMod;
     }
 }

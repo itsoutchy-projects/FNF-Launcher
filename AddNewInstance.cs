@@ -49,19 +49,46 @@ namespace FNF_Launcher
                 return;
             }
             name = instanceName.Text;
+            bool pickedEngine = false;
             if (radioButton1.Checked)
             {
                 type = InstanceType.Psych;
-            } else if (radioButton2.Checked)
+                pickedEngine = true;
+            }
+            else if (radioButton2.Checked)
             {
                 type = InstanceType.Codename;
-            } else if (radioButton3.Checked)
+                pickedEngine = true;
+            }
+            else if (radioButton3.Checked)
             {
                 type = InstanceType.Kade;
+                pickedEngine = true;
             }
             else if (radioButton4.Checked)
             {
                 type = InstanceType.LeatherEngine;
+                pickedEngine = true;
+            }
+            else if (radioButton5.Checked)
+            {
+                type = InstanceType.JSEngine;
+                pickedEngine = true;
+            }
+            else if (radioButton6.Checked)
+            {
+                type = InstanceType.FPSPlus;
+                pickedEngine = true;
+            }
+            else if (radioButton7.Checked)
+            {
+                type = InstanceType.DoidoEngine;
+                pickedEngine = true;
+            }
+            if (!pickedEngine)
+            {
+                Messenger.MessageBox("You need to pick an engine");
+                return;
             }
             created = true;
             Close();

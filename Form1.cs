@@ -6,6 +6,7 @@ using FNF_Launcher.Properties;
 using IWshRuntimeLibrary;
 using File = System.IO.File;
 using DarkModeForms;
+using System.Security.Permissions;
 
 namespace FNF_Launcher
 {
@@ -17,6 +18,10 @@ namespace FNF_Launcher
         // Psych Engine    - ShadowMario
         // Kade Engine     - KadeDev
         // Codename Engine - CodenameCrew
+        // Leather Engine  - Leather128
+        // JS Engine       - JordanSantiagoYT
+        // FPS Plus        - ThatRozebudDude
+        // Doido Engine    - DoidoTeam
         //
         // Please do not copy my code
         // Instead create a fork of my code with your fixes
@@ -44,13 +49,36 @@ namespace FNF_Launcher
 
         public DarkModeCS? dm = null;
 
+        public void ProtocolINIT()
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = $"{Directory.GetCurrentDirectory()}/FNFLauncherInit.exe",
+                UseShellExecute = true
+            });
+        }
+
         public Form1()
         {
             InitializeComponent();
             try
             {
+                instances.View = View.LargeIcon;
+                ImageList imageList = new ImageList();
+                imageList.ImageSize = new Size(64, 64);
+                imageList.Images.Add(Icon);
+                instances.LargeImageList = imageList;
+                instances.SmallImageList = imageList;
+
                 if (!File.Exists(PathUtils.Absolute("settings.txt")))
                 {
+                    //MessageBox.Show("Btw, if you want to be able to install mods via a url, run FNFLauncherInit.exe. Though this may not be supported");
+                    // ^ I would add this but
+                    // 1. Not likely to be widely supported on sites like Gamebanana
+                    // 2. SUPER difficult to implement (cant request admin permission while still allowing app to be run)
+                    // So uhh if you want you can fork this repo and try it
+                    // gl
+                    
                     File.WriteAllText(PathUtils.Absolute("settings.txt"), "theme=system");
                 }
                 DarkModeCS.DisplayMode mode = DarkModeCS.DisplayMode.SystemDefault;
@@ -83,11 +111,32 @@ namespace FNF_Launcher
                 settingsBttn.Click += SettingsBttn_Click;
                 aboutBttn.Click += AboutBttn_Click;
                 instances.KeyDown += Instances_KeyDown;
+                installMod.Click += InstallMod_Click;
             } catch (Exception ex)
             {
                 Messenger.MessageBox(ex.Message);
             }
             //AddInstance("test", InstanceType.Psych);
+        }
+
+        private void InstallMod_Click(object? sender, EventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Archives|*.zip;*.7z";
+            fileDialog.Multiselect = false;
+            fileDialog.Title = "Choose a mod to install";
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
+                
+                ExtractFile(fileDialog.FileName, Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
+                
+                //if (Directory.Exists(Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}")))
+                //{
+                //    Directory.Move(Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}"), Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
+                //}
+                //ExtractFile(fileDialog.FileName, $"{Directory.GetParent($"{Directory.GetCurrentDirectory()}\\{meta[0].Split("=")[1]}").FullName}/mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}");
+            }
         }
 
         private void Instances_KeyDown(object? sender, KeyEventArgs e)
@@ -158,12 +207,14 @@ namespace FNF_Launcher
                 rightPanelRun.Enabled = true;
                 rightPanelShowFolder.Enabled = true;
                 makeshortcut.Enabled = true;
+                installMod.Enabled = true;
             } else
             {
                 instanceNameLabel.Text = "...";
                 rightPanelRun.Enabled = false;
                 rightPanelShowFolder.Enabled = false;
                 makeshortcut.Enabled = false;
+                installMod.Enabled = false;
             }
         }
 
@@ -267,7 +318,7 @@ namespace FNF_Launcher
                 instances.Items.Add(new ListViewItem
                 {
                     Text = Path.GetFileName(p.Replace("/", @"\")),
-                    //ImageIndex = 0
+                    ImageIndex = 0
                 });
             }
         }
@@ -311,7 +362,37 @@ namespace FNF_Launcher
 
                     webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
                 }
-                    downloading.stepChange();
+                else if (type == InstanceType.JSEngine)
+                {
+                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                    Tuple<string, string> rn = InstanceTypeToPair(type);
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                    int no = 4;
+
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                }
+                else if (type == InstanceType.FPSPlus)
+                {
+                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                    Tuple<string, string> rn = InstanceTypeToPair(type);
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                    int no = 0;
+
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                }
+                else if (type == InstanceType.DoidoEngine)
+                {
+                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                    Tuple<string, string> rn = InstanceTypeToPair(type);
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                    int no = 4;
+
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                }
+                downloading.stepChange();
                 ExtractFile($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}", $"{Directory.GetCurrentDirectory()}/Instances/{name}");
 
                 File.Delete($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}");
@@ -319,6 +400,9 @@ namespace FNF_Launcher
                 if (type == InstanceType.Psych)
                 {
                     File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}/{InstanceTypeToParent(type)}.exe");
+                } else if (type == InstanceType.FPSPlus)
+                {
+                    File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/FPS Plus/{InstanceTypeToParent(type)}.exe");
                 } else
                 {
                     File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
@@ -340,7 +424,10 @@ namespace FNF_Launcher
                 new Tuple<string, string>("ShadowMario", "FNF-PsychEngine"),
                 new Tuple<string, string>("KadeDev", "Kade-Engine"),
                 new Tuple<string, string>("CodenameCrew", "CodenameEngine"),
-                new Tuple<string, string>("Leather128", "LeatherEngine")
+                new Tuple<string, string>("Leather128", "LeatherEngine"),
+                new Tuple<string, string>("JordanSantiagoYT", "FNF-JS-Engine"),
+                new Tuple<string, string>("ThatRozebudDude", "FPS-Plus-Public"),
+                new Tuple<string, string>("DoidoTeam", "FNF-Doido-Engine")
             };
             return engines[(int)type];
         }
@@ -370,7 +457,10 @@ namespace FNF_Launcher
                 "PsychEngine",
                 "Kade Engine",
                 "CodenameEngine",
-                "Leather Engine"
+                "Leather Engine",
+                "JSEngine",
+                "FunkinFPSPlus",
+                "DoidoEngine"
             };
             return engines[(int)type];
         }
@@ -393,6 +483,9 @@ namespace FNF_Launcher
         Psych,
         Kade,
         Codename,
-        LeatherEngine
+        LeatherEngine,
+        JSEngine,
+        FPSPlus,
+        DoidoEngine
     }
 }

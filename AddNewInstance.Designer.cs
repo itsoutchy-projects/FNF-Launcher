@@ -31,13 +31,18 @@
             label1 = new Label();
             radioButton1 = new RadioButton();
             groupBox1 = new GroupBox();
+            radioButton6 = new RadioButton();
+            radioButton5 = new RadioButton();
+            radioButton4 = new RadioButton();
             radioButton3 = new RadioButton();
             radioButton2 = new RadioButton();
             instanceName = new TextBox();
             label2 = new Label();
             doneButton = new Button();
-            radioButton4 = new RadioButton();
+            panel1 = new Panel();
+            radioButton7 = new RadioButton();
             groupBox1.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -63,16 +68,52 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(radioButton7);
+            groupBox1.Controls.Add(radioButton6);
+            groupBox1.Controls.Add(radioButton5);
             groupBox1.Controls.Add(radioButton4);
             groupBox1.Controls.Add(radioButton3);
             groupBox1.Controls.Add(radioButton2);
             groupBox1.Controls.Add(radioButton1);
-            groupBox1.Location = new Point(12, 79);
+            groupBox1.Location = new Point(0, 36);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(250, 154);
+            groupBox1.Size = new Size(250, 234);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Engine";
+            // 
+            // radioButton6
+            // 
+            radioButton6.AutoSize = true;
+            radioButton6.Location = new Point(6, 176);
+            radioButton6.Name = "radioButton6";
+            radioButton6.Size = new Size(83, 24);
+            radioButton6.TabIndex = 7;
+            radioButton6.TabStop = true;
+            radioButton6.Text = "FPS Plus";
+            radioButton6.UseVisualStyleBackColor = true;
+            // 
+            // radioButton5
+            // 
+            radioButton5.AutoSize = true;
+            radioButton5.Location = new Point(6, 146);
+            radioButton5.Name = "radioButton5";
+            radioButton5.Size = new Size(92, 24);
+            radioButton5.TabIndex = 6;
+            radioButton5.TabStop = true;
+            radioButton5.Text = "JS Engine";
+            radioButton5.UseVisualStyleBackColor = true;
+            // 
+            // radioButton4
+            // 
+            radioButton4.AutoSize = true;
+            radioButton4.Location = new Point(6, 116);
+            radioButton4.Name = "radioButton4";
+            radioButton4.Size = new Size(128, 24);
+            radioButton4.TabIndex = 5;
+            radioButton4.TabStop = true;
+            radioButton4.Text = "Leather Engine";
+            radioButton4.UseVisualStyleBackColor = true;
             // 
             // radioButton3
             // 
@@ -98,7 +139,7 @@
             // 
             // instanceName
             // 
-            instanceName.Location = new Point(67, 43);
+            instanceName.Location = new Point(55, 0);
             instanceName.Name = "instanceName";
             instanceName.Size = new Size(125, 27);
             instanceName.TabIndex = 4;
@@ -106,7 +147,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 46);
+            label2.Location = new Point(0, 3);
             label2.Name = "label2";
             label2.Size = new Size(49, 20);
             label2.TabIndex = 5;
@@ -122,31 +163,42 @@
             doneButton.Text = "Done";
             doneButton.UseVisualStyleBackColor = true;
             // 
-            // radioButton4
+            // panel1
             // 
-            radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(6, 116);
-            radioButton4.Name = "radioButton4";
-            radioButton4.Size = new Size(128, 24);
-            radioButton4.TabIndex = 5;
-            radioButton4.TabStop = true;
-            radioButton4.Text = "Leather Engine";
-            radioButton4.UseVisualStyleBackColor = true;
+            panel1.AutoScroll = true;
+            panel1.Controls.Add(groupBox1);
+            panel1.Controls.Add(instanceName);
+            panel1.Controls.Add(label2);
+            panel1.Location = new Point(0, 43);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(583, 190);
+            panel1.TabIndex = 7;
+            // 
+            // radioButton7
+            // 
+            radioButton7.AutoSize = true;
+            radioButton7.Location = new Point(6, 206);
+            radioButton7.Name = "radioButton7";
+            radioButton7.Size = new Size(121, 24);
+            radioButton7.TabIndex = 8;
+            radioButton7.TabStop = true;
+            radioButton7.Text = "Doido Engine";
+            radioButton7.UseVisualStyleBackColor = true;
             // 
             // AddNewInstance
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(595, 268);
+            Controls.Add(panel1);
             Controls.Add(doneButton);
-            Controls.Add(label2);
-            Controls.Add(instanceName);
-            Controls.Add(groupBox1);
             Controls.Add(label1);
             Name = "AddNewInstance";
             Text = "Add New Instance";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -161,5 +213,9 @@
         private Label label2;
         private Button doneButton;
         private RadioButton radioButton4;
+        private Panel panel1;
+        private RadioButton radioButton5;
+        private RadioButton radioButton6;
+        private RadioButton radioButton7;
     }
 }
