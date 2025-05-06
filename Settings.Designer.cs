@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             label1 = new Label();
             themeGroup = new GroupBox();
             radioButton3 = new RadioButton();
@@ -35,8 +36,13 @@
             radioButton1 = new RadioButton();
             doneBttn = new Button();
             panel1 = new Panel();
+            groupBox1 = new GroupBox();
+            radioButton5 = new RadioButton();
+            radioButton6 = new RadioButton();
+            toolTip1 = new ToolTip(components);
             themeGroup.SuspendLayout();
             panel1.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -107,11 +113,51 @@
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.Controls.Add(groupBox1);
             panel1.Controls.Add(themeGroup);
             panel1.Location = new Point(12, 39);
             panel1.Name = "panel1";
             panel1.Size = new Size(580, 246);
             panel1.TabIndex = 3;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(radioButton5);
+            groupBox1.Controls.Add(radioButton6);
+            groupBox1.Location = new Point(3, 137);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(244, 90);
+            groupBox1.TabIndex = 3;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Icons";
+            // 
+            // radioButton5
+            // 
+            radioButton5.AutoSize = true;
+            radioButton5.Location = new Point(22, 56);
+            radioButton5.Name = "radioButton5";
+            radioButton5.Size = new Size(88, 24);
+            radioButton5.TabIndex = 1;
+            radioButton5.TabStop = true;
+            radioButton5.Text = "Constant";
+            toolTip1.SetToolTip(radioButton5, "Consistant icon (uses app icon rather than from the engine)");
+            radioButton5.UseVisualStyleBackColor = true;
+            // 
+            // radioButton6
+            // 
+            radioButton6.AutoSize = true;
+            radioButton6.Location = new Point(22, 26);
+            radioButton6.Name = "radioButton6";
+            radioButton6.Size = new Size(84, 24);
+            radioButton6.TabIndex = 0;
+            radioButton6.TabStop = true;
+            radioButton6.Text = "Instance";
+            toolTip1.SetToolTip(radioButton6, "Loads the icon from the instance (tends to be VERY low quality)");
+            radioButton6.UseVisualStyleBackColor = true;
+            // 
+            // toolTip1
+            // 
+            toolTip1.ToolTipTitle = "Icon settings";
             // 
             // Settings
             // 
@@ -126,6 +172,8 @@
             themeGroup.ResumeLayout(false);
             themeGroup.PerformLayout();
             panel1.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -139,5 +187,9 @@
         private RadioButton radioButton1;
         private Button doneBttn;
         private Panel panel1;
+        private GroupBox groupBox1;
+        private RadioButton radioButton5;
+        private RadioButton radioButton6;
+        private ToolTip toolTip1;
     }
 }

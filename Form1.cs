@@ -58,6 +58,8 @@ namespace FNF_Launcher
             });
         }
 
+        public static bool instanceIcons = true;
+
         public Form1()
         {
             InitializeComponent();
@@ -65,8 +67,9 @@ namespace FNF_Launcher
             {
                 instances.View = View.LargeIcon;
                 ImageList imageList = new ImageList();
+                imageList.ColorDepth = ColorDepth.Depth32Bit;
                 imageList.ImageSize = new Size(64, 64);
-                imageList.Images.Add(Icon);
+                //imageList.Images.Add(Icon);
                 instances.LargeImageList = imageList;
                 instances.SmallImageList = imageList;
 
@@ -79,7 +82,7 @@ namespace FNF_Launcher
                     // So uhh if you want you can fork this repo and try it
                     // gl
                     
-                    File.WriteAllText(PathUtils.Absolute("settings.txt"), "theme=system");
+                    File.WriteAllText(PathUtils.Absolute("settings.txt"), "theme=system\nicons=instance");
                 }
                 DarkModeCS.DisplayMode mode = DarkModeCS.DisplayMode.SystemDefault;
                 string[] settings = File.ReadAllText(PathUtils.Absolute("settings.txt")).Split("\n");
@@ -89,6 +92,14 @@ namespace FNF_Launcher
                 } else if (settings[0].Split("=")[1] == "light")
                 {
                     mode = DarkModeCS.DisplayMode.ClearMode;
+                }
+                if (settings[1].Split("=")[1] == "instance")
+                {
+                    instanceIcons = true;
+                }
+                else if (settings[1].Split("=")[1] == "constant")
+                {
+                    instanceIcons = false;
                 }
                 dm = new DarkModeCS(this)
                 {
@@ -145,6 +156,10 @@ namespace FNF_Launcher
             {
                 deleteSelected();
             }
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
+            {
+                refreshInstances();
+            }
         }
 
         public void deleteSelected()
@@ -171,6 +186,12 @@ namespace FNF_Launcher
         {
             Settings settings = new Settings(this);
             settings.Show();
+            settings.FormClosed += Settings_FormClosed;
+        }
+
+        private void Settings_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            refreshInstances();
         }
 
         public void changeTheme(DarkModeCS.DisplayMode theme)
@@ -312,14 +333,34 @@ namespace FNF_Launcher
             if (instances.Items.Count > 0)
             {
                 instances.Items.Clear(); // prepare it for refreshing them
+                instances.LargeImageList.Images.Clear();
             }
+            int i = 0;
             foreach (string p in Directory.GetDirectories($"{Directory.GetCurrentDirectory()}/Instances"))
-            {   
+            {
+                if (instanceIcons)
+                {
+                    if (Directory.GetDirectories(p).Length != 1)
+                    {
+                        // not psych or fps plus
+                        instances.LargeImageList.Images.Add(new Icon($"{p}/icon.ico"));
+                    }
+                    else
+                    {
+
+                        instances.LargeImageList.Images.Add(new Icon($"{Directory.GetDirectories(p)[0]}/icon.ico"));
+                    }
+                } else
+                {
+                    instances.LargeImageList.Images.Add(Icon);
+                }
+
                 instances.Items.Add(new ListViewItem
                 {
                     Text = Path.GetFileName(p.Replace("/", @"\")),
-                    ImageIndex = 0
+                    ImageIndex = i
                 });
+                i++;
             }
         }
 

@@ -44,11 +44,39 @@ namespace FNF_Launcher
                     };
                     break;
             }
+            switch (settings[1].Split("=")[1])
+            {
+                case "instance":
+                    radioButton6.Checked = true;
+                    break;
+                case "constant":
+                    radioButton5.Checked = true;
+                    break;
+            }
             radioButton1.CheckedChanged += RadioButton1_CheckedChanged;
             radioButton2.CheckedChanged += RadioButton2_CheckedChanged;
             radioButton3.CheckedChanged += RadioButton3_CheckedChanged;
+
+            radioButton5.CheckedChanged += RadioButton5_CheckedChanged;
+            radioButton6.CheckedChanged += RadioButton5_CheckedChanged;
             doneBttn.Click += DoneBttn_Click;
             this.form = form;
+        }
+
+        private void RadioButton5_CheckedChanged(object? sender, EventArgs e)
+        {
+            Form1.instanceIcons = radioButton6.Checked;
+
+            string[] settings = File.ReadAllLines(PathUtils.Absolute("settings.txt"));
+            File.WriteAllText(PathUtils.Absolute("settings.txt"), $"{settings[0]}\nicons={(Form1.instanceIcons ? "instance" : "constant")}");
+        }
+
+        private void RadioButton6_CheckedChanged(object? sender, EventArgs e)
+        {
+            Form1.instanceIcons = !radioButton5.Checked;
+
+            string[] settings = File.ReadAllLines(PathUtils.Absolute("settings.txt"));
+            File.WriteAllText(PathUtils.Absolute("settings.txt"), $"{settings[0]}\nicons={(Form1.instanceIcons ? "instance" : "constant")}");
         }
 
         private void DoneBttn_Click(object? sender, EventArgs e)
@@ -64,7 +92,8 @@ namespace FNF_Launcher
                 form.dm.ApplyTheme(mode);
                 dm.ApplyTheme(mode);
             }
-            File.WriteAllText(PathUtils.Absolute("settings.txt"), "theme=system");
+            string[] settings = File.ReadAllLines(PathUtils.Absolute("settings.txt"));
+            File.WriteAllText(PathUtils.Absolute("settings.txt"), $"theme=system\n{settings[1]}");
         }
         private void RadioButton2_CheckedChanged(object? sender, EventArgs e)
         {
@@ -74,7 +103,8 @@ namespace FNF_Launcher
                 form.dm.ApplyTheme(mode);
                 dm.ApplyTheme(mode);
             }
-            File.WriteAllText(PathUtils.Absolute("settings.txt"), "theme=dark");
+            string[] settings = File.ReadAllLines(PathUtils.Absolute("settings.txt"));
+            File.WriteAllText(PathUtils.Absolute("settings.txt"), $"theme=dark\n{settings[1]}");
         }
         private void RadioButton3_CheckedChanged(object? sender, EventArgs e)
         {
@@ -84,7 +114,8 @@ namespace FNF_Launcher
                 form.dm.ApplyTheme(mode);
                 dm.ApplyTheme(mode);
             }
-            File.WriteAllText(PathUtils.Absolute("settings.txt"), "theme=light");
+            string[] settings = File.ReadAllLines(PathUtils.Absolute("settings.txt"));
+            File.WriteAllText(PathUtils.Absolute("settings.txt"), $"theme=light\n{settings[1]}");
         }
     }
 }
