@@ -85,6 +85,11 @@ namespace FNF_Launcher
                 type = InstanceType.DoidoEngine;
                 pickedEngine = true;
             }
+            else if (radioButton8.Checked)
+            {
+                type = InstanceType.DenpaEngine;
+                pickedEngine = true;
+            }
             if (!pickedEngine)
             {
                 Messenger.MessageBox("You need to pick an engine");

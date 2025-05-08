@@ -31,6 +31,8 @@
             label1 = new Label();
             radioButton1 = new RadioButton();
             groupBox1 = new GroupBox();
+            radioButton8 = new RadioButton();
+            radioButton7 = new RadioButton();
             radioButton6 = new RadioButton();
             radioButton5 = new RadioButton();
             radioButton4 = new RadioButton();
@@ -40,7 +42,6 @@
             label2 = new Label();
             doneButton = new Button();
             panel1 = new Panel();
-            radioButton7 = new RadioButton();
             groupBox1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -68,6 +69,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(radioButton8);
             groupBox1.Controls.Add(radioButton7);
             groupBox1.Controls.Add(radioButton6);
             groupBox1.Controls.Add(radioButton5);
@@ -77,10 +79,32 @@
             groupBox1.Controls.Add(radioButton1);
             groupBox1.Location = new Point(0, 36);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(250, 234);
+            groupBox1.Size = new Size(250, 269);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Engine";
+            // 
+            // radioButton8
+            // 
+            radioButton8.AutoSize = true;
+            radioButton8.Location = new Point(6, 236);
+            radioButton8.Name = "radioButton8";
+            radioButton8.Size = new Size(123, 24);
+            radioButton8.TabIndex = 9;
+            radioButton8.TabStop = true;
+            radioButton8.Text = "Denpa Engine";
+            radioButton8.UseVisualStyleBackColor = true;
+            // 
+            // radioButton7
+            // 
+            radioButton7.AutoSize = true;
+            radioButton7.Location = new Point(6, 206);
+            radioButton7.Name = "radioButton7";
+            radioButton7.Size = new Size(121, 24);
+            radioButton7.TabIndex = 8;
+            radioButton7.TabStop = true;
+            radioButton7.Text = "Doido Engine";
+            radioButton7.UseVisualStyleBackColor = true;
             // 
             // radioButton6
             // 
@@ -174,17 +198,6 @@
             panel1.Size = new Size(583, 190);
             panel1.TabIndex = 7;
             // 
-            // radioButton7
-            // 
-            radioButton7.AutoSize = true;
-            radioButton7.Location = new Point(6, 206);
-            radioButton7.Name = "radioButton7";
-            radioButton7.Size = new Size(121, 24);
-            radioButton7.TabIndex = 8;
-            radioButton7.TabStop = true;
-            radioButton7.Text = "Doido Engine";
-            radioButton7.UseVisualStyleBackColor = true;
-            // 
             // AddNewInstance
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -217,5 +230,6 @@
         private RadioButton radioButton5;
         private RadioButton radioButton6;
         private RadioButton radioButton7;
+        private RadioButton radioButton8;
     }
 }

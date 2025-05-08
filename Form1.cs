@@ -25,6 +25,7 @@ namespace FNF_Launcher
         // JS Engine       - JordanSantiagoYT
         // FPS Plus        - ThatRozebudDude
         // Doido Engine    - DoidoTeam
+        // Denpa Engine    - UmbratheUmbreon
         //
         // Please do not copy my code
         // Instead create a fork of my code with your fixes
@@ -465,6 +466,16 @@ namespace FNF_Launcher
 
                     webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
+                else if (type == InstanceType.DenpaEngine)
+                {
+                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                    Tuple<string, string> rn = InstanceTypeToPair(type);
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                    int no = 0;
+
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                }
                 downloading.stepChange();
                 ExtractFile($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}", $"{PathUtils.ApplicationDirectory}/Instances/{name}");
 
@@ -500,7 +511,8 @@ namespace FNF_Launcher
                 new Tuple<string, string>("Leather128", "LeatherEngine"),
                 new Tuple<string, string>("JordanSantiagoYT", "FNF-JS-Engine"),
                 new Tuple<string, string>("ThatRozebudDude", "FPS-Plus-Public"),
-                new Tuple<string, string>("DoidoTeam", "FNF-Doido-Engine")
+                new Tuple<string, string>("DoidoTeam", "FNF-Doido-Engine"),
+                new Tuple<string, string>("UmbratheUmbreon", "PublicDenpaEngine")
             };
             return engines[(int)type];
         }
@@ -533,7 +545,8 @@ namespace FNF_Launcher
                 "Leather Engine",
                 "JSEngine",
                 "FunkinFPSPlus",
-                "DoidoEngine"
+                "DoidoEngine",
+                "DenpaEngine"
             };
             return engines[(int)type];
         }
@@ -559,6 +572,7 @@ namespace FNF_Launcher
         LeatherEngine,
         JSEngine,
         FPSPlus,
-        DoidoEngine
+        DoidoEngine,
+        DenpaEngine
     }
 }
