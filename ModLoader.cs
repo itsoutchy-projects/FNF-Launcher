@@ -15,16 +15,34 @@ namespace FNF_Launcher
     public partial class ModLoader : Form
     {
         public string instance = "";
+
+        public DarkModeCS dm;
+
         private string path;
         public List<RadioButton> radioButtons = new List<RadioButton>();
 
         public ModLoader(string modPath)
         {
             InitializeComponent();
+            DarkModeCS.DisplayMode mode = DarkModeCS.DisplayMode.SystemDefault;
+            string[] settings = File.ReadAllText(PathUtils.Absolute("settings.txt")).Split("\n");
+            if (settings[0].Split("=")[1] == "dark")
+            {
+                mode = DarkModeCS.DisplayMode.DarkMode;
+            }
+            else if (settings[0].Split("=")[1] == "light")
+            {
+                mode = DarkModeCS.DisplayMode.ClearMode;
+            }
+            dm = new DarkModeCS(this)
+            {
+                //[Optional] Choose your preferred color mode here:
+                ColorMode = mode
+            };
+
             path = modPath;
             foreach (string p in Directory.GetDirectories($"{PathUtils.ApplicationDirectory}\\Instances"))
             {
-                MessageBox.Show(p);
                 RadioButton t = new RadioButton();
                 t.Dock = DockStyle.Top;
                 t.Text = Path.GetFileName(p);
