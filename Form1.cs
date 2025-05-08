@@ -7,6 +7,9 @@ using IWshRuntimeLibrary;
 using File = System.IO.File;
 using DarkModeForms;
 using System.Security.Permissions;
+using System.IO.Compression;
+using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace FNF_Launcher
 {
@@ -30,9 +33,9 @@ namespace FNF_Launcher
 
         // Scroll down since you'll need to make some changes below
 
-        public string GetMetaFile(string name)
+        public static string GetMetaFile(string name)
         {
-            return $"{Directory.GetCurrentDirectory()}/Instances/{name}/meta";
+            return $"{PathUtils.ApplicationDirectory}/Instances/{name}/meta";
         }
 
         private void CreateShortcut(string name, string path)
@@ -53,18 +56,41 @@ namespace FNF_Launcher
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = $"{Directory.GetCurrentDirectory()}/FNFLauncherInit.exe",
+                FileName = $"{PathUtils.ApplicationDirectory}/FNFLauncherInit.exe",
                 UseShellExecute = true
             });
         }
 
         public static bool instanceIcons = true;
 
+        public static void SetAssociation(string Extension, string KeyName, string OpenWith, string FileDescription)
+        {
+            // The stuff that was above here is basically the same
+
+            // Delete the key instead of trying to change it
+            var CurrentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + Extension, true);
+            CurrentUser.DeleteSubKey("UserChoice", false);
+            CurrentUser.Close();
+
+            // Tell explorer the file association has been changed
+            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
         public Form1()
         {
             InitializeComponent();
             try
             {
+                //MessageBox.Show(PathUtils.ApplicationDirectory);
+                if (Environment.GetCommandLineArgs().Length > 1)
+                {
+                    ModLoader modLoader = new ModLoader(Environment.GetCommandLineArgs()[1]);
+                    modLoader.ShowDialog();
+                }
+                FileAssociations.EnsureAssociationsSet(); // SHOULD work, idrk well see ig
                 instances.View = View.LargeIcon;
                 ImageList imageList = new ImageList();
                 imageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -108,9 +134,9 @@ namespace FNF_Launcher
                 };
 
                 instanceNameLabel.Text = "...";
-                if (!Directory.Exists($"{Directory.GetCurrentDirectory()}/Instances/"))
+                if (!Directory.Exists($"{PathUtils.ApplicationDirectory}/Instances/"))
                 {
-                    Directory.CreateDirectory($"{Directory.GetCurrentDirectory()}/Instances/");
+                    Directory.CreateDirectory($"{PathUtils.ApplicationDirectory}/Instances/");
                 }
                 refreshInstances();
                 instances.DoubleClick += Instances_DoubleClick;
@@ -133,20 +159,26 @@ namespace FNF_Launcher
         private void InstallMod_Click(object? sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Archives|*.zip;*.7z";
+            fileDialog.Filter = "Archives|*.fnf;*.zip;*.7z";
             fileDialog.Multiselect = false;
             fileDialog.Title = "Choose a mod to install";
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
                 string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
-                
-                ExtractFile(fileDialog.FileName, Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
+                if (Path.GetExtension(fileDialog.FileName).ToLower().Contains("fnf"))
+                {
+                    // .fnf files are ALWAYS zip format archives, if they are any other format they wont work
+                    ZipFile.ExtractToDirectory(fileDialog.FileName, Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
+                } else
+                {
+                    ExtractFile(fileDialog.FileName, Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
+                }
                 
                 //if (Directory.Exists(Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}")))
                 //{
                 //    Directory.Move(Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}"), Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
                 //}
-                //ExtractFile(fileDialog.FileName, $"{Directory.GetParent($"{Directory.GetCurrentDirectory()}\\{meta[0].Split("=")[1]}").FullName}/mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}");
+                //ExtractFile(fileDialog.FileName, $"{Directory.GetParent($"{PathUtils.ApplicationDirectory}\\{meta[0].Split("=")[1]}").FullName}/mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}");
             }
         }
 
@@ -170,7 +202,7 @@ namespace FNF_Launcher
                 if (Messenger.MessageBox($"Are you sure you want to delete {s}?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     instances.SelectedItems[0].Selected = false;
-                    Directory.Delete($"{Directory.GetCurrentDirectory()}/Instances/{s}", true);
+                    Directory.Delete($"{PathUtils.ApplicationDirectory}/Instances/{s}", true);
                     refreshInstances();
                 }
             }
@@ -206,7 +238,7 @@ namespace FNF_Launcher
         private void Makeshortcut_Click(object? sender, EventArgs e)
         {
             string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
-            CreateShortcut(instances.SelectedItems[0].Text, $"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}");
+            CreateShortcut(instances.SelectedItems[0].Text, $"{PathUtils.ApplicationDirectory}/{meta[0].Split("=")[1]}");
             Messenger.MessageBox("Done!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -258,19 +290,19 @@ namespace FNF_Launcher
                         {
                             return;
                         }
-                        Folder.CopyDirectory($"{Directory.GetCurrentDirectory()}/Instances/{instances.SelectedItems[0].Text}", $"{Directory.GetCurrentDirectory()}/Instances/{menu.name}", true);
+                        Folder.CopyDirectory($"{PathUtils.ApplicationDirectory}/Instances/{instances.SelectedItems[0].Text}", $"{PathUtils.ApplicationDirectory}/Instances/{menu.name}", true);
                         File.WriteAllText(GetMetaFile(menu.name), instanceNameLabel.Text);
-                        if (Directory.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/PsychEngine"))
+                        if (Directory.Exists($"{PathUtils.ApplicationDirectory}/Instances/{menu.name}/PsychEngine"))
                         {
                             File.WriteAllText(GetMetaFile(menu.name), $"exepath=Instances/{menu.name}/{InstanceTypeToParent(InstanceType.Psych)}/{InstanceTypeToParent(InstanceType.Psych)}.exe");
                         }
                         else
                         {
                             InstanceType type = InstanceType.Kade;
-                            if (File.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/CodenameEngine.exe"))
+                            if (File.Exists($"{PathUtils.ApplicationDirectory}/Instances/{menu.name}/CodenameEngine.exe"))
                             {
                                 type = InstanceType.Codename;
-                            } else if (File.Exists($"{Directory.GetCurrentDirectory()}/Instances/{menu.name}/Leather Engine.exe"))
+                            } else if (File.Exists($"{PathUtils.ApplicationDirectory}/Instances/{menu.name}/Leather Engine.exe"))
                             {
                                 type = InstanceType.LeatherEngine;
                             }
@@ -290,11 +322,11 @@ namespace FNF_Launcher
             string[] meta = File.ReadAllText(GetMetaFile(instances.SelectedItems[0].Text)).Split("\n");
             if (meta[0].Split("=")[1].Contains("PsychEngine"))
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", $"{Directory.GetCurrentDirectory()}\\instances\\{instances.SelectedItems[0].Text}\\PsychEngine\\");
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", $"{PathUtils.ApplicationDirectory}\\instances\\{instances.SelectedItems[0].Text}\\PsychEngine\\");
             }
             else
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", $"{Directory.GetCurrentDirectory()}\\instances\\{instances.SelectedItems[0].Text}\\");
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", $"{PathUtils.ApplicationDirectory}\\instances\\{instances.SelectedItems[0].Text}\\");
             }
         }
 
@@ -311,16 +343,16 @@ namespace FNF_Launcher
                 Process p = new Process();
                 p.StartInfo = new ProcessStartInfo
                 {
-                    FileName = $"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}"
+                    FileName = $"{PathUtils.ApplicationDirectory}/{meta[0].Split("=")[1]}"
                 };
-                p.StartInfo.WorkingDirectory = (new DirectoryInfo($"{Directory.GetCurrentDirectory()}/{meta[0].Split("=")[1]}").Parent.FullName);
+                p.StartInfo.WorkingDirectory = (new DirectoryInfo($"{PathUtils.ApplicationDirectory}/{meta[0].Split("=")[1]}").Parent.FullName);
                 if (meta[0].Contains("Psych"))
                 {
-                    //p.StartInfo.WorkingDirectory = $"{Directory.GetCurrentDirectory()}/{(string)instances.Items[instances.SelectedIndex]}/PsychEngine/".Replace("\\", "/");
+                    //p.StartInfo.WorkingDirectory = $"{PathUtils.ApplicationDirectory}/{(string)instances.Items[instances.SelectedIndex]}/PsychEngine/".Replace("\\", "/");
                 }
                 else
                 {
-                    //p.StartInfo.WorkingDirectory = $"{Directory.GetCurrentDirectory()}/{(string)instances.Items[instances.SelectedIndex]}/".Replace("\\", "/");
+                    //p.StartInfo.WorkingDirectory = $"{PathUtils.ApplicationDirectory}/{(string)instances.Items[instances.SelectedIndex]}/".Replace("\\", "/");
                 }
                 p.Start();
             }
@@ -336,7 +368,7 @@ namespace FNF_Launcher
                 instances.LargeImageList.Images.Clear();
             }
             int i = 0;
-            foreach (string p in Directory.GetDirectories($"{Directory.GetCurrentDirectory()}/Instances"))
+            foreach (string p in Directory.GetDirectories($"{PathUtils.ApplicationDirectory}/Instances"))
             {
                 if (instanceIcons)
                 {
@@ -368,7 +400,7 @@ namespace FNF_Launcher
         {
             try
             {
-                Directory.CreateDirectory($"{Directory.GetCurrentDirectory()}/Instances");
+                Directory.CreateDirectory($"{PathUtils.ApplicationDirectory}/Instances");
 
                 WebClient webclient = new WebClient();
                 webclient.Headers.Add("user-agent", "Anything");
@@ -383,16 +415,16 @@ namespace FNF_Launcher
                     Tuple<string, string> rn = InstanceTypeToPair(type);
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
-                    webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                    webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 } else if (type == InstanceType.Kade)
                 {
                     // idrk if this actually gets the latest version - im trying to figure this out
-                    webclient.DownloadFile("https://gamebanana.com/dl/619823", $"{Directory.GetCurrentDirectory()}/Instances/{name}.7z");
+                    webclient.DownloadFile("https://gamebanana.com/dl/619823", $"{PathUtils.ApplicationDirectory}/Instances/{name}.7z");
                     ext = "7z";
                 } else if (type == InstanceType.Codename)
                 {
                     // this one is automatically updated so its all good
-                    webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                    webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 } else if (type == InstanceType.LeatherEngine)
                 {
                     GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
@@ -401,7 +433,7 @@ namespace FNF_Launcher
 
                     int no = Environment.Is64BitOperatingSystem ? 3 : 4;
 
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.JSEngine)
                 {
@@ -411,7 +443,7 @@ namespace FNF_Launcher
 
                     int no = 4;
 
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.FPSPlus)
                 {
@@ -421,7 +453,7 @@ namespace FNF_Launcher
 
                     int no = 0;
 
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.DoidoEngine)
                 {
@@ -431,22 +463,22 @@ namespace FNF_Launcher
 
                     int no = 4;
 
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{Directory.GetCurrentDirectory()}/Instances/{name}.zip");
+                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 downloading.stepChange();
-                ExtractFile($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}", $"{Directory.GetCurrentDirectory()}/Instances/{name}");
+                ExtractFile($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}", $"{PathUtils.ApplicationDirectory}/Instances/{name}");
 
-                File.Delete($"{Directory.GetCurrentDirectory()}/Instances/{name}.{ext}");
+                File.Delete($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}");
 
                 if (type == InstanceType.Psych)
                 {
-                    File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}/{InstanceTypeToParent(type)}.exe");
+                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}/{InstanceTypeToParent(type)}.exe");
                 } else if (type == InstanceType.FPSPlus)
                 {
-                    File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/FPS Plus/{InstanceTypeToParent(type)}.exe");
+                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/FPS Plus/{InstanceTypeToParent(type)}.exe");
                 } else
                 {
-                    File.WriteAllText($"{Directory.GetCurrentDirectory()}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
+                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
                 }
                 downloading.Close();
 

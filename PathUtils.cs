@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace FNF_Launcher
 {
-    public class PathUtils
+    public static class PathUtils
     {
+        public static string ApplicationDirectory
+        {
+            get
+            {
+                // get it in a good way
+                return Directory.GetParent(Environment.GetCommandLineArgs()[0]).FullName;
+            }
+        }
+
         /// <summary>
         /// Appends <paramref name="path"/> to the current working directory
         /// </summary>
@@ -15,7 +24,7 @@ namespace FNF_Launcher
         /// <returns>An absolute version of <paramref name="path"/></returns>
         public static string Absolute(string path)
         {
-            return $"{Directory.GetCurrentDirectory()}/{path}";
+            return $"{ApplicationDirectory}/{path}";
         }
     }
 }
