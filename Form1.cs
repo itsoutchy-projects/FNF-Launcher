@@ -83,6 +83,8 @@ namespace FNF_Launcher
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
+        public string nameBeforeEdit;
+
         public Form1()
         {
             InitializeComponent();
@@ -153,11 +155,33 @@ namespace FNF_Launcher
                 aboutBttn.Click += AboutBttn_Click;
                 instances.KeyDown += Instances_KeyDown;
                 installMod.Click += InstallMod_Click;
+                instances.BeforeLabelEdit += Instances_BeforeLabelEdit;
+                instances.AfterLabelEdit += Instances_AfterLabelEdit;
             } catch (Exception ex)
             {
                 Messenger.MessageBox(ex.Message);
             }
             //AddInstance("test", InstanceType.Psych);
+        }
+
+        private void Instances_BeforeLabelEdit(object? sender, LabelEditEventArgs e)
+        {
+            nameBeforeEdit = instances.Items[e.Item].Text;
+        }
+
+        private void Instances_AfterLabelEdit(object? sender, LabelEditEventArgs e)
+        {
+            // renames it apparently (?)
+            // it shouldnt be this ambigous :/
+            if (e.Label == null)
+            {
+                return;
+            }
+            Directory.Move(Path.Combine(PathUtils.ApplicationDirectory, "Instances", nameBeforeEdit), Path.Combine(PathUtils.ApplicationDirectory, "Instances", e.Label));
+            string[] meta = File.ReadAllLines(GetMetaFile(e.Label));
+            string exename = meta[0].Split("/")[meta[0].Split("/").Length - 1];
+            meta[0] = $"exepath=Instances/{e.Label}/{exename}";
+            File.WriteAllText(GetMetaFile(e.Label), meta.Join());
         }
 
         private void InstallMod_Click(object? sender, EventArgs e)
@@ -292,6 +316,9 @@ namespace FNF_Launcher
                         return;
                     case "Run":
                         run();
+                        return;
+                    case "Rename":
+                        instances.SelectedItems[0].BeginEdit();
                         return;
                     case "Duplicate":
                         DuplicateMenu menu = new DuplicateMenu();
@@ -596,5 +623,13 @@ namespace FNF_Launcher
         FPSPlus,
         DoidoEngine,
         DenpaEngine
+    }
+
+    public static class External
+    {
+        public static string Join(this string[] strings, string separator = "\n")
+        {
+            return string.Join(separator, strings);
+        }
     }
 }

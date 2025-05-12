@@ -33,6 +33,7 @@
             contextMenuStrip1 = new ContextMenuStrip(components);
             openInstanceFolderToolStripMenuItem = new ToolStripMenuItem();
             runToolStripMenuItem = new ToolStripMenuItem();
+            renameToolStripMenuItem = new ToolStripMenuItem();
             duplicateToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
             newInstance = new Button();
@@ -56,9 +57,9 @@
             // contextMenuStrip1
             // 
             contextMenuStrip1.ImageScalingSize = new Size(20, 20);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { openInstanceFolderToolStripMenuItem, runToolStripMenuItem, duplicateToolStripMenuItem, deleteToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { openInstanceFolderToolStripMenuItem, runToolStripMenuItem, renameToolStripMenuItem, duplicateToolStripMenuItem, deleteToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(219, 100);
+            contextMenuStrip1.Size = new Size(219, 124);
             // 
             // openInstanceFolderToolStripMenuItem
             // 
@@ -71,6 +72,12 @@
             runToolStripMenuItem.Name = "runToolStripMenuItem";
             runToolStripMenuItem.Size = new Size(218, 24);
             runToolStripMenuItem.Text = "Run";
+            // 
+            // renameToolStripMenuItem
+            // 
+            renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            renameToolStripMenuItem.Size = new Size(218, 24);
+            renameToolStripMenuItem.Text = "Rename";
             // 
             // duplicateToolStripMenuItem
             // 
@@ -152,6 +159,7 @@
             // 
             instances.ContextMenuStrip = contextMenuStrip1;
             instances.Dock = DockStyle.Bottom;
+            instances.LabelEdit = true;
             instances.Location = new Point(0, 59);
             instances.MultiSelect = false;
             instances.Name = "instances";
@@ -257,5 +265,6 @@
         private Button aboutBttn;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private Button installMod;
+        private ToolStripMenuItem renameToolStripMenuItem;
     }
 }
