@@ -21,6 +21,7 @@ namespace FNF_Launcher
         // FNF Launcher created by itsoutchy
         //
         // Engines were created by their respective owners:
+        // FNF Base Game   - Funkin' Crew
         // Psych Engine    - ShadowMario
         // Kade Engine     - KadeDev
         // Codename Engine - CodenameCrew
