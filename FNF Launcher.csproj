@@ -28,6 +28,8 @@
 
   <ItemGroup>
     <PackageReference Include="Octokit" Version="14.0.0" />
+    <PackageReference Include="SharpCompress" Version="0.39.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
 
   <ItemGroup>

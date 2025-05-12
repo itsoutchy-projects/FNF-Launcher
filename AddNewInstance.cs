@@ -90,6 +90,11 @@ namespace FNF_Launcher
                 type = InstanceType.DenpaEngine;
                 pickedEngine = true;
             }
+            else if (radioButton9.Checked)
+            {
+                type = InstanceType.Funkin;
+                pickedEngine = true;
+            }
             if (!pickedEngine)
             {
                 Messenger.MessageBox("You need to pick an engine");

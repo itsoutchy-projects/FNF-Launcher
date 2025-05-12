@@ -10,6 +10,9 @@ using System.Security.Permissions;
 using System.IO.Compression;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using SharpCompress;
+using SharpCompress.Archives.Rar;
+using SharpCompress.Archives;
 
 namespace FNF_Launcher
 {
@@ -160,7 +163,7 @@ namespace FNF_Launcher
         private void InstallMod_Click(object? sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Archives|*.fnf;*.zip;*.7z";
+            fileDialog.Filter = "Archives|*.fnf;*.zip;*.7z;*.rar;*.cab";
             fileDialog.Multiselect = false;
             fileDialog.Title = "Choose a mod to install";
             if (fileDialog.ShowDialog() == DialogResult.OK)
@@ -170,9 +173,15 @@ namespace FNF_Launcher
                 {
                     // .fnf files are ALWAYS zip format archives, if they are any other format they wont work
                     ZipFile.ExtractToDirectory(fileDialog.FileName, Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
+                } else if (Path.GetExtension(fileDialog.FileName).ToLower().Contains("rar"))
+                {
+                    RarArchive rar = RarArchive.Open(fileDialog.FileName);
+                    rar.ExtractToDirectory(Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods\\"));
+                    //sevenZipExtractor.Dispose();
                 } else
                 {
-                    ExtractFile(fileDialog.FileName, Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/"));
+                    ExtractFile(fileDialog.FileName, Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods\\"));
+                    //MessageBox.Show(Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods\\"));
                 }
                 
                 //if (Directory.Exists(Path.Combine(Directory.GetParent(meta[0].Split("=")[1]).FullName, $"mods/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}/{Path.GetFileNameWithoutExtension(fileDialog.FileName)}")))
@@ -408,7 +417,17 @@ namespace FNF_Launcher
                 string ext = "zip";
                 Downloading downloading = new Downloading();
                 downloading.Show();
-                if (type == InstanceType.Psych)
+                if (type == InstanceType.Funkin)
+                {
+                    // Change this to associate it with you
+                    // Replace "itsoutchy-projects" with your Github name
+                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                    Tuple<string, string> rn = InstanceTypeToPair(type);
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                    webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                }
+                else if (type == InstanceType.Psych)
                 {
                     // Change this to associate it with you
                     // Replace "itsoutchy-projects" with your Github name
@@ -505,6 +524,7 @@ namespace FNF_Launcher
         {
             Tuple<string, string>[] engines =
             {
+                new Tuple<string, string>("FunkinCrew", "Funkin"),
                 new Tuple<string, string>("ShadowMario", "FNF-PsychEngine"),
                 new Tuple<string, string>("KadeDev", "Kade-Engine"),
                 new Tuple<string, string>("CodenameCrew", "CodenameEngine"),
@@ -539,6 +559,7 @@ namespace FNF_Launcher
         {
             string[] engines =
             {
+                "Funkin",
                 "PsychEngine",
                 "Kade Engine",
                 "CodenameEngine",
@@ -566,6 +587,7 @@ namespace FNF_Launcher
     // FNF Engines, so it knows where to get the files from
     public enum InstanceType
     {
+        Funkin,
         Psych,
         Kade,
         Codename,

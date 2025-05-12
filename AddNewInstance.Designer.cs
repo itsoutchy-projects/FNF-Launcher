@@ -42,6 +42,7 @@
             label2 = new Label();
             doneButton = new Button();
             panel1 = new Panel();
+            radioButton9 = new RadioButton();
             groupBox1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -59,7 +60,7 @@
             // radioButton1
             // 
             radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(6, 26);
+            radioButton1.Location = new Point(6, 57);
             radioButton1.Name = "radioButton1";
             radioButton1.Size = new Size(115, 24);
             radioButton1.TabIndex = 2;
@@ -69,6 +70,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(radioButton9);
             groupBox1.Controls.Add(radioButton8);
             groupBox1.Controls.Add(radioButton7);
             groupBox1.Controls.Add(radioButton6);
@@ -79,7 +81,7 @@
             groupBox1.Controls.Add(radioButton1);
             groupBox1.Location = new Point(0, 36);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(250, 269);
+            groupBox1.Size = new Size(250, 292);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Engine";
@@ -87,7 +89,7 @@
             // radioButton8
             // 
             radioButton8.AutoSize = true;
-            radioButton8.Location = new Point(6, 236);
+            radioButton8.Location = new Point(6, 267);
             radioButton8.Name = "radioButton8";
             radioButton8.Size = new Size(123, 24);
             radioButton8.TabIndex = 9;
@@ -98,7 +100,7 @@
             // radioButton7
             // 
             radioButton7.AutoSize = true;
-            radioButton7.Location = new Point(6, 206);
+            radioButton7.Location = new Point(6, 237);
             radioButton7.Name = "radioButton7";
             radioButton7.Size = new Size(121, 24);
             radioButton7.TabIndex = 8;
@@ -109,7 +111,7 @@
             // radioButton6
             // 
             radioButton6.AutoSize = true;
-            radioButton6.Location = new Point(6, 176);
+            radioButton6.Location = new Point(6, 207);
             radioButton6.Name = "radioButton6";
             radioButton6.Size = new Size(83, 24);
             radioButton6.TabIndex = 7;
@@ -120,7 +122,7 @@
             // radioButton5
             // 
             radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(6, 146);
+            radioButton5.Location = new Point(6, 177);
             radioButton5.Name = "radioButton5";
             radioButton5.Size = new Size(92, 24);
             radioButton5.TabIndex = 6;
@@ -131,7 +133,7 @@
             // radioButton4
             // 
             radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(6, 116);
+            radioButton4.Location = new Point(6, 147);
             radioButton4.Name = "radioButton4";
             radioButton4.Size = new Size(128, 24);
             radioButton4.TabIndex = 5;
@@ -142,7 +144,7 @@
             // radioButton3
             // 
             radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(6, 86);
+            radioButton3.Location = new Point(6, 117);
             radioButton3.Name = "radioButton3";
             radioButton3.Size = new Size(113, 24);
             radioButton3.TabIndex = 4;
@@ -153,7 +155,7 @@
             // radioButton2
             // 
             radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(6, 56);
+            radioButton2.Location = new Point(6, 87);
             radioButton2.Name = "radioButton2";
             radioButton2.Size = new Size(151, 24);
             radioButton2.TabIndex = 3;
@@ -198,6 +200,17 @@
             panel1.Size = new Size(583, 190);
             panel1.TabIndex = 7;
             // 
+            // radioButton9
+            // 
+            radioButton9.AutoSize = true;
+            radioButton9.Location = new Point(6, 27);
+            radioButton9.Name = "radioButton9";
+            radioButton9.Size = new Size(157, 24);
+            radioButton9.TabIndex = 10;
+            radioButton9.TabStop = true;
+            radioButton9.Text = "VSlice (Base game)";
+            radioButton9.UseVisualStyleBackColor = true;
+            // 
             // AddNewInstance
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -231,5 +244,6 @@
         private RadioButton radioButton6;
         private RadioButton radioButton7;
         private RadioButton radioButton8;
+        private RadioButton radioButton9;
     }
 }
