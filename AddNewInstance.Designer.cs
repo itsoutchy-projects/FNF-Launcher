@@ -31,6 +31,7 @@
             label1 = new Label();
             radioButton1 = new RadioButton();
             groupBox1 = new GroupBox();
+            radioButton9 = new RadioButton();
             radioButton8 = new RadioButton();
             radioButton7 = new RadioButton();
             radioButton6 = new RadioButton();
@@ -42,7 +43,6 @@
             label2 = new Label();
             doneButton = new Button();
             panel1 = new Panel();
-            radioButton9 = new RadioButton();
             groupBox1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -81,10 +81,21 @@
             groupBox1.Controls.Add(radioButton1);
             groupBox1.Location = new Point(0, 36);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(250, 292);
+            groupBox1.Size = new Size(250, 302);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Engine";
+            // 
+            // radioButton9
+            // 
+            radioButton9.AutoSize = true;
+            radioButton9.Location = new Point(6, 27);
+            radioButton9.Name = "radioButton9";
+            radioButton9.Size = new Size(157, 24);
+            radioButton9.TabIndex = 10;
+            radioButton9.TabStop = true;
+            radioButton9.Text = "VSlice (Base game)";
+            radioButton9.UseVisualStyleBackColor = true;
             // 
             // radioButton8
             // 
@@ -199,17 +210,6 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(583, 190);
             panel1.TabIndex = 7;
-            // 
-            // radioButton9
-            // 
-            radioButton9.AutoSize = true;
-            radioButton9.Location = new Point(6, 27);
-            radioButton9.Name = "radioButton9";
-            radioButton9.Size = new Size(157, 24);
-            radioButton9.TabIndex = 10;
-            radioButton9.TabStop = true;
-            radioButton9.Text = "VSlice (Base game)";
-            radioButton9.UseVisualStyleBackColor = true;
             // 
             // AddNewInstance
             // 
