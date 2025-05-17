@@ -20,6 +20,14 @@ namespace FNF_Launcher
         };
         public int stepNo = 0;
         public DarkModeCS dm;
+
+        public float progress
+        {
+            set
+            {
+                progressBar1.Value = (int)(value * 100);
+            }
+        }
         public Downloading()
         {
             InitializeComponent();
@@ -47,6 +55,7 @@ namespace FNF_Launcher
             stepNo++;
             Text = $"{steps[stepNo]}...";
             header.Text = $"{steps[stepNo]} {stepNo + 1} of {steps.Length}";
+            progress = 0; // reset, extracting has no progress so no point
         }
     }
 }

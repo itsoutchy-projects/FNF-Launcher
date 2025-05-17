@@ -30,6 +30,7 @@
         {
             label1 = new Label();
             header = new Label();
+            progressBar1 = new DarkModeForms.FlatProgressBar();
             SuspendLayout();
             // 
             // label1
@@ -51,11 +52,21 @@
             header.TabIndex = 1;
             header.Text = "(smth) Step _ of _";
             // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(12, 88);
+            progressBar1.Name = "progressBar1";
+            progressBar1.ProgressBarColor = Color.RoyalBlue;
+            progressBar1.Size = new Size(339, 29);
+            progressBar1.Style = ProgressBarStyle.Continuous;
+            progressBar1.TabIndex = 2;
+            // 
             // Downloading
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(363, 129);
+            Controls.Add(progressBar1);
             Controls.Add(header);
             Controls.Add(label1);
             Name = "Downloading";
@@ -68,5 +79,6 @@
 
         private Label label1;
         private Label header;
+        public DarkModeForms.FlatProgressBar progressBar1;
     }
 }

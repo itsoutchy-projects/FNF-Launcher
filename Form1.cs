@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using SharpCompress;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FNF_Launcher
 {
@@ -434,17 +435,25 @@ namespace FNF_Launcher
             }
         }
 
+        private Downloading? downloading;
+        private DownloadManager download;
+        private string name;
+        private string ext = "zip";
+        private InstanceType type;
+
         public async void AddInstance(string name, InstanceType type)
         {
             try
             {
+                this.name = name;
                 Directory.CreateDirectory($"{PathUtils.ApplicationDirectory}/Instances");
 
                 WebClient webclient = new WebClient();
                 webclient.Headers.Add("user-agent", "Anything");
-                string ext = "zip";
-                Downloading downloading = new Downloading();
+                downloading = new Downloading();
                 downloading.Show();
+                this.type = type;
+                string downloadURL = "";
                 if (type == InstanceType.Funkin)
                 {
                     // Change this to associate it with you
@@ -452,8 +461,8 @@ namespace FNF_Launcher
                     GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
                     Tuple<string, string> rn = InstanceTypeToPair(type);
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
-
-                    webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[3].BrowserDownloadUrl;
+                    //webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.Psych)
                 {
@@ -462,17 +471,19 @@ namespace FNF_Launcher
                     GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
                     Tuple<string, string> rn = InstanceTypeToPair(type);
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
-
-                    webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[3].BrowserDownloadUrl;
+                    //webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 } else if (type == InstanceType.Kade)
                 {
                     // idrk if this actually gets the latest version - im trying to figure this out
-                    webclient.DownloadFile("https://gamebanana.com/dl/619823", $"{PathUtils.ApplicationDirectory}/Instances/{name}.7z");
+                    //webclient.DownloadFile("https://gamebanana.com/dl/619823", $"{PathUtils.ApplicationDirectory}/Instances/{name}.7z");
+                    downloadURL = "https://gamebanana.com/dl/619823";
                     ext = "7z";
                 } else if (type == InstanceType.Codename)
                 {
                     // this one is automatically updated so its all good
-                    webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = "https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip";
+                    //webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 } else if (type == InstanceType.LeatherEngine)
                 {
                     GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
@@ -480,8 +491,8 @@ namespace FNF_Launcher
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
                     int no = Environment.Is64BitOperatingSystem ? 3 : 4;
-
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.JSEngine)
                 {
@@ -490,8 +501,8 @@ namespace FNF_Launcher
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
                     int no = 4;
-
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.FPSPlus)
                 {
@@ -500,8 +511,8 @@ namespace FNF_Launcher
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
                     int no = 0;
-
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                    // webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.DoidoEngine)
                 {
@@ -510,8 +521,8 @@ namespace FNF_Launcher
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
                     int no = 4;
-
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.DenpaEngine)
                 {
@@ -520,32 +531,66 @@ namespace FNF_Launcher
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
                     int no = 0;
-
-                    webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
-                downloading.stepChange();
-                ExtractFile($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}", $"{PathUtils.ApplicationDirectory}/Instances/{name}");
-
-                File.Delete($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}");
-
-                if (type == InstanceType.Psych)
-                {
-                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}/{InstanceTypeToParent(type)}.exe");
-                } else if (type == InstanceType.FPSPlus)
-                {
-                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/FPS Plus/{InstanceTypeToParent(type)}.exe");
-                } else
-                {
-                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
-                }
-                downloading.Close();
-
-                refreshInstances();
+                download = new DownloadManager($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}");
+                download.Download(downloadURL);
+                download.downloadProgressChanged += Download_downloadProgressChanged;
+                download.downloadCompleted += Download_downloadCompleted;
+                //downloading.stepChange();
+                
             }
             catch (Exception ex)
             {
                 Messenger.MessageBox($"{ex.Message} \n{ex.StackTrace}");
             }
+        }
+
+        private void Download_downloadCompleted(object? sender, EventArgs e)
+        {
+            // not extracting properly so uhh gotta fix that..
+            ExtractFile($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}", $"{PathUtils.ApplicationDirectory}/Instances/{name}");
+            
+            //Task.
+
+            File.Delete($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}");
+
+            switch (type)
+            {
+                case InstanceType.Psych:
+                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}/{InstanceTypeToParent(type)}.exe");
+                    break;
+                case InstanceType.FPSPlus:
+                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/FPS Plus/{InstanceTypeToParent(type)}.exe");
+                    break;
+                default:
+                    // its NOT always vslice.. so stop making it funkin :/
+                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
+                    break;
+            }
+
+            //if (type == InstanceType.Psych)
+            //{
+            //    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}/{InstanceTypeToParent(type)}.exe");
+            //}
+            //else if (type == InstanceType.FPSPlus)
+            //{
+            //    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/FPS Plus/{InstanceTypeToParent(type)}.exe");
+            //}
+            //else
+            //{
+            //    // its NOT always vslice.. so stop making it funkin :/
+            //    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
+            //}
+            downloading.Close();
+
+            refreshInstances();
+        }
+
+        private void Download_downloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            downloading.progress = (float)download.progress;
         }
 
         public Tuple<string, string> InstanceTypeToPair(InstanceType type)
@@ -577,9 +622,9 @@ namespace FNF_Launcher
                 Process x = Process.Start(pro);
                 x.WaitForExit();
             }
-            catch (Exception Ex)
+            catch (Exception ex)
             {
-                //handle error
+                Messenger.MessageBox($"{ex.Message} \n{ex.StackTrace}");
             }
         }
 
