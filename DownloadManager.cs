@@ -91,7 +91,9 @@ namespace FNF_Launcher
 
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            progress = e.ProgressPercentage / 100; // 0 - 1
+            //progress = e.ProgressPercentage / 100; // 0 - 1
+            progress = (float)((double)e.BytesReceived / (double)e.TotalBytesToReceive); // more reliable than e.progresspercentage
+            
             if (downloadProgressChanged != null)
             {
                 downloadProgressChanged(this, e);
