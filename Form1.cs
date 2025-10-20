@@ -411,15 +411,22 @@ namespace FNF_Launcher
             {
                 if (instanceIcons)
                 {
-                    if (Directory.GetDirectories(p).Length != 1)
+                    try
                     {
-                        // not psych or fps plus
-                        instances.LargeImageList.Images.Add(new Icon($"{p}/icon.ico"));
-                    }
-                    else
-                    {
+                        if (Directory.GetDirectories(p).Length != 1)
+                        {
+                            // not psych or fps plus
+                            instances.LargeImageList.Images.Add(new Icon($"{p}/icon.ico"));
+                        }
+                        else
+                        {
 
-                        instances.LargeImageList.Images.Add(new Icon($"{Directory.GetDirectories(p)[0]}/icon.ico"));
+                            instances.LargeImageList.Images.Add(new Icon($"{Directory.GetDirectories(p)[0]}/icon.ico"));
+                        }
+                    } catch (Exception ex)
+                    {
+                        // icon.ico is missing, resort to default icon
+                        instances.LargeImageList.Images.Add(Icon);
                     }
                 } else
                 {
