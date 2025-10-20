@@ -461,7 +461,7 @@ namespace FNF_Launcher
                     GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
                     Tuple<string, string> rn = InstanceTypeToPair(type);
                     Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
-                    downloadURL = rel.Assets[3].BrowserDownloadUrl;
+                    downloadURL = rel.Assets[2].BrowserDownloadUrl;
                     //webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
                 }
                 else if (type == InstanceType.Psych)
