@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace FNF_Launcher
 {
@@ -38,6 +39,11 @@ namespace FNF_Launcher
                 //[Optional] Choose your preferred color mode here:
                 ColorMode = mode
             };
+            List<CustomEngine> engines = new List<CustomEngine>();
+            foreach (string s in Directory.GetFiles(PathUtils.Absolute("engines")))
+            {
+                engines.Add(new CustomEngine(PathUtils.Absolute("engines/" + s)));
+            }
             doneButton.Click += DoneButton_Click;
         }
 
