@@ -469,7 +469,7 @@ namespace FNF_Launcher
                 if (eng != null)
                 {
                     GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    MessageBox.Show(eng.repo);
+                    //MessageBox.Show(eng.repo);
                     string[] split = eng.repo.Replace("https://github.com/", "").Split("/");
                     Tuple<string, string> rn = new Tuple<string, string>(split[0], split[1]);
                     //(await client.Repository.Get(rn.Item1, rn.Item2))
