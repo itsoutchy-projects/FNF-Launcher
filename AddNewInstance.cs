@@ -19,7 +19,13 @@ namespace FNF_Launcher
 
         public bool created = false;
 
+        public CustomEngine? engine = null;
+
         public DarkModeCS dm;
+
+        public List<RadioButton> customEngineRadios = new List<RadioButton>();
+
+        public List<CustomEngine> engines = new List<CustomEngine>();
 
         public AddNewInstance()
         {
@@ -39,10 +45,25 @@ namespace FNF_Launcher
                 //[Optional] Choose your preferred color mode here:
                 ColorMode = mode
             };
-            List<CustomEngine> engines = new List<CustomEngine>();
+            
             foreach (string s in Directory.GetFiles(PathUtils.Absolute("engines")))
             {
-                engines.Add(new CustomEngine(PathUtils.Absolute("engines/" + s)));
+                CustomEngine eng = new CustomEngine(s);
+                engines.Add(eng);
+                RadioButton lastEngine = radioButton8;
+                if (customEngineRadios.Count > 0)
+                {
+                    lastEngine = customEngineRadios[customEngineRadios.Count - 1];
+                }
+                RadioButton thisRad = new RadioButton()
+                {
+                    Text = eng.name,
+                    Parent = groupBox1,
+                    Location = new Point(lastEngine.Location.X, lastEngine.Location.Y + 30)
+                };
+                thisRad.Size = new Size(groupBox1.Size.Width - 15, thisRad.Size.Height);
+                customEngineRadios.Add(thisRad);
+                groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1.Size.Height + 30);
             }
             doneButton.Click += DoneButton_Click;
         }
@@ -100,6 +121,20 @@ namespace FNF_Launcher
             {
                 type = InstanceType.Funkin;
                 pickedEngine = true;
+            }
+            else
+            {
+                int i = 0;
+                foreach (RadioButton radio in customEngineRadios)
+                {
+                    if (radio.Checked)
+                    {
+                        pickedEngine = true;
+                        engine = engines[i];
+                        break;
+                    }
+                    i++;
+                }
             }
             if (!pickedEngine)
             {

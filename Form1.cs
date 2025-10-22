@@ -146,6 +146,10 @@ namespace FNF_Launcher
                 {
                     Directory.CreateDirectory($"{PathUtils.ApplicationDirectory}/Instances/");
                 }
+                if (!Directory.Exists($"{PathUtils.ApplicationDirectory}/engines/"))
+                {
+                    Directory.CreateDirectory($"{PathUtils.ApplicationDirectory}/engines/");
+                }
                 refreshInstances();
                 instances.DoubleClick += Instances_DoubleClick;
                 contextMenuStrip1.ItemClicked += ContextMenuStrip1_ItemClicked;
@@ -447,8 +451,9 @@ namespace FNF_Launcher
         private string name;
         private string ext = "zip";
         private InstanceType type;
+        private CustomEngine? engi;
 
-        public async void AddInstance(string name, InstanceType type)
+        public async void AddInstance(string name, InstanceType type, CustomEngine? eng)
         {
             try
             {
@@ -461,89 +466,108 @@ namespace FNF_Launcher
                 downloading.Show();
                 this.type = type;
                 string downloadURL = "";
-                if (type == InstanceType.Funkin)
-                {
-                    // Change this to associate it with you
-                    // Replace "itsoutchy-projects" with your Github name
-                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    Tuple<string, string> rn = InstanceTypeToPair(type);
-                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
-                    downloadURL = rel.Assets[2].BrowserDownloadUrl;
-                    //webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
-                }
-                else if (type == InstanceType.Psych)
-                {
-                    // Change this to associate it with you
-                    // Replace "itsoutchy-projects" with your Github name
-                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    Tuple<string, string> rn = InstanceTypeToPair(type);
-                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
-                    downloadURL = rel.Assets[3].BrowserDownloadUrl;
-                    //webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
-                } else if (type == InstanceType.Kade)
-                {
-                    // idrk if this actually gets the latest version - im trying to figure this out
-                    //webclient.DownloadFile("https://gamebanana.com/dl/619823", $"{PathUtils.ApplicationDirectory}/Instances/{name}.7z");
-                    downloadURL = "https://gamebanana.com/dl/619823";
-                    ext = "7z";
-                } else if (type == InstanceType.Codename)
-                {
-                    // this one is automatically updated so its all good
-                    downloadURL = "https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip";
-                    //webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
-                } else if (type == InstanceType.LeatherEngine)
+                if (eng != null)
                 {
                     GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    Tuple<string, string> rn = InstanceTypeToPair(type);
-                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+                    MessageBox.Show(eng.repo);
+                    string[] split = eng.repo.Replace("https://github.com/", "").Split("/");
+                    Tuple<string, string> rn = new Tuple<string, string>(split[0], split[1]);
+                    //(await client.Repository.Get(rn.Item1, rn.Item2))
+                    Release rel = await client.Repository.Release.GetLatest(rn.Item1.Trim(), rn.Item2.Trim());
 
-                    int no = Environment.Is64BitOperatingSystem ? 3 : 4;
-                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
-                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    downloadURL = rel.Assets[(int)eng.platformNum].BrowserDownloadUrl;
                 }
-                else if (type == InstanceType.JSEngine)
+                else
                 {
-                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    Tuple<string, string> rn = InstanceTypeToPair(type);
-                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+                    if (type == InstanceType.Funkin)
+                    {
+                        // Change this to associate it with you
+                        // Replace "itsoutchy-projects" with your Github name
+                        GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                        Tuple<string, string> rn = InstanceTypeToPair(type);
+                        Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+                        downloadURL = rel.Assets[2].BrowserDownloadUrl;
+                        //webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
+                    else if (type == InstanceType.Psych)
+                    {
+                        // Change this to associate it with you
+                        // Replace "itsoutchy-projects" with your Github name
+                        GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                        Tuple<string, string> rn = InstanceTypeToPair(type);
+                        Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+                        downloadURL = rel.Assets[3].BrowserDownloadUrl;
+                        //webclient.DownloadFile(rel.Assets[3].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
+                    else if (type == InstanceType.Kade)
+                    {
+                        // idrk if this actually gets the latest version - im trying to figure this out
+                        //webclient.DownloadFile("https://gamebanana.com/dl/619823", $"{PathUtils.ApplicationDirectory}/Instances/{name}.7z");
+                        downloadURL = "https://gamebanana.com/dl/619823";
+                        ext = "7z";
+                    }
+                    else if (type == InstanceType.Codename)
+                    {
+                        // this one is automatically updated so its all good
+                        downloadURL = "https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip";
+                        //webclient.DownloadFile("https://nightly.link/CodenameCrew/CodenameEngine/workflows/windows/main/Codename%20Engine.zip", $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
+                    else if (type == InstanceType.LeatherEngine)
+                    {
+                        GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                        Tuple<string, string> rn = InstanceTypeToPair(type);
+                        Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
-                    int no = 4;
-                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
-                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
-                }
-                else if (type == InstanceType.FPSPlus)
-                {
-                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    Tuple<string, string> rn = InstanceTypeToPair(type);
-                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+                        int no = Environment.Is64BitOperatingSystem ? 3 : 4;
+                        downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                        //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
+                    else if (type == InstanceType.JSEngine)
+                    {
+                        GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                        Tuple<string, string> rn = InstanceTypeToPair(type);
+                        Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
-                    int no = 0;
-                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
-                    // webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
-                }
-                else if (type == InstanceType.DoidoEngine)
-                {
-                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    Tuple<string, string> rn = InstanceTypeToPair(type);
-                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+                        int no = 4;
+                        downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                        //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
+                    else if (type == InstanceType.FPSPlus)
+                    {
+                        GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                        Tuple<string, string> rn = InstanceTypeToPair(type);
+                        Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
-                    int no = 4;
-                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
-                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
-                }
-                else if (type == InstanceType.DenpaEngine)
-                {
-                    GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
-                    Tuple<string, string> rn = InstanceTypeToPair(type);
-                    Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+                        int no = 0;
+                        downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                        // webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
+                    else if (type == InstanceType.DoidoEngine)
+                    {
+                        GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                        Tuple<string, string> rn = InstanceTypeToPair(type);
+                        Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
 
-                    int no = 0;
-                    downloadURL = rel.Assets[no].BrowserDownloadUrl;
-                    //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                        int no = 4;
+                        downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                        //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
+                    else if (type == InstanceType.DenpaEngine)
+                    {
+                        GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+                        Tuple<string, string> rn = InstanceTypeToPair(type);
+                        Release rel = await client.Repository.Release.GetLatest(rn.Item1, rn.Item2);
+
+                        int no = 0;
+                        downloadURL = rel.Assets[no].BrowserDownloadUrl;
+                        //webclient.DownloadFile(rel.Assets[no].BrowserDownloadUrl, $"{PathUtils.ApplicationDirectory}/Instances/{name}.zip");
+                    }
                 }
+                
                 download = new DownloadManager($"{PathUtils.ApplicationDirectory}/Instances/{name}.{ext}");
                 download.Download(downloadURL);
                 download.downloadProgressChanged += Download_downloadProgressChanged;
+                engi = eng;
                 download.downloadCompleted += Download_downloadCompleted;
                 //downloading.stepChange();
                 
@@ -573,7 +597,13 @@ namespace FNF_Launcher
                     break;
                 default:
                     // its NOT always vslice.. so stop making it funkin :/
-                    File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
+                    if (engi != null)
+                    {
+                        File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{engi.executable}");
+                    } else
+                    {
+                        File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{InstanceTypeToParent(type)}.exe");
+                    }
                     break;
             }
 
@@ -660,7 +690,7 @@ namespace FNF_Launcher
             {
                 return;
             }
-            AddInstance(addNewInstance.name, addNewInstance.type);
+            AddInstance(addNewInstance.name, addNewInstance.type, addNewInstance.engine);
         }
     }
 

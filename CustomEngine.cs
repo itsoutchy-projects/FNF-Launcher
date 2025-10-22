@@ -11,7 +11,7 @@ namespace FNF_Launcher
     {
         public string name;
         public string repo;
-        public int platformNum;
+        public int? platformNum;
         public string executable; // this is basically whether its "PsychEngine/PsychEngine.exe" or "FunkinFPSPlus/FPS Plus.exe" etc.
 
         public CustomEngine(string path)
@@ -26,9 +26,9 @@ namespace FNF_Launcher
                 }
                 if (prop[0] == "repo")
                 {
-                    name = prop[1];
+                    repo = prop[1];
                 }
-                if (prop[0] == "platform num")
+                if (prop[0] == "platformNum")
                 {
                     platformNum = int.Parse(prop[1]);
                 }
@@ -36,6 +36,22 @@ namespace FNF_Launcher
                 {
                     executable = prop[1];
                 }
+            }
+            if (name == null)
+            {
+                name = Path.GetFileNameWithoutExtension(path);
+            }
+            if (repo == null)
+            {
+                throw new ArgumentNullException(nameof(repo), $"Instance '{name}' is missing property 'repo'");
+            }
+            if (platformNum == null)
+            {
+                throw new ArgumentNullException(nameof(platformNum), $"Instance '{platformNum}' is missing property 'platformNum'");
+            }
+            if (executable == null)
+            {
+                throw new ArgumentNullException(nameof(executable), $"Instance '{executable}' is missing property 'executable'");
             }
         }
     }
