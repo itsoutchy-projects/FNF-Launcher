@@ -36,6 +36,7 @@
             radioButton1 = new RadioButton();
             doneBttn = new Button();
             panel1 = new Panel();
+            openAppFolder = new Button();
             groupBox1 = new GroupBox();
             radioButton5 = new RadioButton();
             radioButton6 = new RadioButton();
@@ -113,12 +114,22 @@
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.Controls.Add(openAppFolder);
             panel1.Controls.Add(groupBox1);
             panel1.Controls.Add(themeGroup);
             panel1.Location = new Point(12, 39);
             panel1.Name = "panel1";
             panel1.Size = new Size(580, 246);
             panel1.TabIndex = 3;
+            // 
+            // openAppFolder
+            // 
+            openAppFolder.Location = new Point(3, 233);
+            openAppFolder.Name = "openAppFolder";
+            openAppFolder.Size = new Size(553, 29);
+            openAppFolder.TabIndex = 4;
+            openAppFolder.Text = "Open App Folder";
+            openAppFolder.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -191,5 +202,6 @@
         private RadioButton radioButton5;
         private RadioButton radioButton6;
         private ToolTip toolTip1;
+        private Button openAppFolder;
     }
 }

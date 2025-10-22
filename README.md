@@ -14,7 +14,7 @@ It's also on Gamebanana!
 ## Custom Engine Documentation
 So, you wanna add your own engine? Well take a look at the documentation for this new feature.  
 
-First off, go ahead and find the folder where you have the launcher at. In there, you'll find an "engines" folder. This is where you'll define your engines.  
+First off, go ahead and find the folder where you have the launcher at (Go to settings and click "Open App Folder"). In there, you'll find an "engines" folder. This is where you'll define your engines.  
 
 Next, make a new file. Name it something like the name of the engine.  
 

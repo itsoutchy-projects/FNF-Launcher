@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -60,7 +61,13 @@ namespace FNF_Launcher
             radioButton5.CheckedChanged += RadioButton5_CheckedChanged;
             radioButton6.CheckedChanged += RadioButton5_CheckedChanged;
             doneBttn.Click += DoneBttn_Click;
+            openAppFolder.Click += OpenAppFolder_Click;
             this.form = form;
+        }
+
+        private void OpenAppFolder_Click(object? sender, EventArgs e)
+        {
+            Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", PathUtils.ApplicationDirectory);
         }
 
         private void RadioButton5_CheckedChanged(object? sender, EventArgs e)
