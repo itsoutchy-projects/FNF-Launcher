@@ -179,7 +179,7 @@ namespace FNF_Launcher
         {
             // renames it apparently (?)
             // it shouldnt be this ambigous :/
-            if (e.Label == null)
+            if (e.Label == null || e.Label == nameBeforeEdit)
             {
                 return;
             }
