@@ -602,7 +602,7 @@ namespace FNF_Launcher
                         File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{engi.executable}");
                     } else
                     {
-                        File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{InstanceTypeToParent(type)}.exe");
+                        File.WriteAllText($"{PathUtils.ApplicationDirectory}/Instances/{name}/meta", $"exepath=Instances/{name}/{InstanceTypeToParent(type)}.exe");
                     }
                     break;
             }
