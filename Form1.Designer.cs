@@ -48,6 +48,7 @@
             instanceNameLabel = new Label();
             rightPanelShowFolder = new Button();
             rightPanelRun = new Button();
+            addExistingInstance = new Button();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -108,6 +109,7 @@
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(addExistingInstance);
             panel1.Controls.Add(aboutBttn);
             panel1.Controls.Add(settingsBttn);
             panel1.Controls.Add(pictureBox1);
@@ -230,6 +232,19 @@
             rightPanelRun.Text = "Run";
             rightPanelRun.UseVisualStyleBackColor = true;
             // 
+            // addExistingInstance
+            // 
+            addExistingInstance.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            addExistingInstance.Image = (Image)resources.GetObject("addExistingInstance.Image");
+            addExistingInstance.ImageAlign = ContentAlignment.MiddleLeft;
+            addExistingInstance.Location = new Point(374, 3);
+            addExistingInstance.Name = "addExistingInstance";
+            addExistingInstance.Size = new Size(146, 53);
+            addExistingInstance.TabIndex = 8;
+            addExistingInstance.Text = "Add Instance";
+            addExistingInstance.TextAlign = ContentAlignment.MiddleRight;
+            addExistingInstance.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -266,5 +281,6 @@
         private ToolStripMenuItem deleteToolStripMenuItem;
         private Button installMod;
         private ToolStripMenuItem renameToolStripMenuItem;
+        private Button addExistingInstance;
     }
 }

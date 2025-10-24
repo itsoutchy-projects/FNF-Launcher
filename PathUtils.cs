@@ -26,5 +26,11 @@ namespace FNF_Launcher
         {
             return $"{ApplicationDirectory}/{path}";
         }
+
+        //public static string GetParent(string path)
+        //{
+        //    string[ compons = path.Split('/');
+        //    return ;
+        //}
     }
 }

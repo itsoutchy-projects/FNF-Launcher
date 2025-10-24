@@ -163,11 +163,28 @@ namespace FNF_Launcher
                 installMod.Click += InstallMod_Click;
                 instances.BeforeLabelEdit += Instances_BeforeLabelEdit;
                 instances.AfterLabelEdit += Instances_AfterLabelEdit;
+                addExistingInstance.Click += AddExistingInstance_Click;
             } catch (Exception ex)
             {
                 Messenger.MessageBox(ex.Message);
             }
             //AddInstance("test", InstanceType.Psych);
+        }
+
+        private void AddExistingInstance_Click(object? sender, EventArgs e)
+        {
+            OpenFileDialog executableDialog = new OpenFileDialog()
+            {
+                Title = "Pick Executable",
+                Filter = "Executables | *.exe",
+                Multiselect = false
+            };
+            executableDialog.ShowDialog();
+            string instanceDir = Directory.GetParent(executableDialog.FileName).FullName;
+            Folder.CopyDirectory(instanceDir, $"{PathUtils.Absolute("Instances")}/{new DirectoryInfo(executableDialog.FileName).Parent.Name}", true);
+            string meta = $"exepath=Instances/{Directory.GetParent(executableDialog.FileName).Name}/{new DirectoryInfo(executableDialog.FileName).Name}";
+            File.WriteAllText(PathUtils.Absolute($"Instances/{new DirectoryInfo(executableDialog.FileName).Parent.Name}/meta"), meta);
+            refreshInstances();
         }
 
         private void Instances_BeforeLabelEdit(object? sender, LabelEditEventArgs e)
