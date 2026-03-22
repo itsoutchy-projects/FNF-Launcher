@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using Octokit;
 
 namespace FNF_Launcher
 {
@@ -26,6 +27,8 @@ namespace FNF_Launcher
         public List<RadioButton> customEngineRadios = new List<RadioButton>();
 
         public List<CustomEngine> engines = new List<CustomEngine>();
+
+        public int version = 0;
 
         public AddNewInstance()
         {
@@ -45,6 +48,8 @@ namespace FNF_Launcher
                 //[Optional] Choose your preferred color mode here:
                 ColorMode = mode
             };
+
+            
             
             foreach (string s in Directory.GetFiles(PathUtils.Absolute("engines")))
             {
@@ -66,6 +71,13 @@ namespace FNF_Launcher
                 groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1.Size.Height + 30);
             }
             doneButton.Click += DoneButton_Click;
+        }
+
+        public void refreshVersions()
+        {
+            versionPicker.Items.Clear();
+            GitHubClient client = new GitHubClient(new ProductHeaderValue("itsoutchy-projects"));
+            //client.Repository.Release.GetAll()
         }
 
         private void DoneButton_Click(object? sender, EventArgs e)

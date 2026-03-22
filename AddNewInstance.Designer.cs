@@ -43,6 +43,8 @@
             label2 = new Label();
             doneButton = new Button();
             panel1 = new Panel();
+            label3 = new Label();
+            versionPicker = new ComboBox();
             groupBox1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -203,6 +205,8 @@
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.Controls.Add(versionPicker);
+            panel1.Controls.Add(label3);
             panel1.Controls.Add(groupBox1);
             panel1.Controls.Add(instanceName);
             panel1.Controls.Add(label2);
@@ -210,6 +214,23 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(583, 190);
             panel1.TabIndex = 7;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(319, 3);
+            label3.Name = "label3";
+            label3.Size = new Size(57, 20);
+            label3.TabIndex = 6;
+            label3.Text = "Version";
+            // 
+            // versionPicker
+            // 
+            versionPicker.FormattingEnabled = true;
+            versionPicker.Location = new Point(391, 0);
+            versionPicker.Name = "versionPicker";
+            versionPicker.Size = new Size(151, 28);
+            versionPicker.TabIndex = 7;
             // 
             // AddNewInstance
             // 
@@ -245,5 +266,7 @@
         private RadioButton radioButton7;
         private RadioButton radioButton8;
         private RadioButton radioButton9;
+        private ComboBox versionPicker;
+        private Label label3;
     }
 }
